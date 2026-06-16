@@ -306,7 +306,7 @@
                 </div>
                 
                 <button onclick="submitOrderWA()" id="btnSubmitOrder" class="w-full py-3.5 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold rounded-xl flex justify-center items-center gap-2 shadow-lg transition-all">
-                    <i data-lucide="send" class="w-5 h-5"></i> Kirim Pesanan ke WhatsApp
+                    <i data-lucide="send" class="w-5 h-5"></i> Kirim Pesanan
                 </button>
             </div>
             
@@ -395,18 +395,21 @@
         let secretTapTimer;
 
         // 1. Ambil Parameter Slug Toko
-        // 1. Ambil Parameter Slug Toko
-const urlParams = new URLSearchParams(window.location.search);
-let storeSlug = urlParams.get('t');
+        const urlParams = new URLSearchParams(window.location.search);
+        let storeSlug = urlParams.get('t');
 
-// --- TAMBAHAN BARU UNTUK BACA URL VERCEL REWRITES ---
-if (!storeSlug) {
-    // Membaca path "/toko-demo" menjadi "toko-demo"
-    const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    if (pathSegments.length > 0) {
-        storeSlug = pathSegments[0]; 
-    }
-}
+        // Jika tidak ada parameter ?t= (artinya Vercel Rewrites berjalan)
+        if (!storeSlug) {
+            const pathSegments = window.location.pathname.split('/').filter(Boolean);
+            if (pathSegments.length > 0) {
+                // Ambil path pertama dari url, misal domain.com/toko-demo -> toko-demo
+                const slug = pathSegments[0];
+                // Mencegah baca file index.html atau toko.html sebagai nama toko
+                if (!slug.includes('.html')) {
+                    storeSlug = slug;
+                }
+            }
+        }
 
         // 2. Fetch Data Toko & Katalog
         async function fetchStoreCatalog() {
@@ -1183,13 +1186,18 @@ if (!storeSlug) {
                 waMessage += `Metode Pembayaran: *${method}*\n\n`;
                 waMessage += `Mohon segera diproses ya. Terima kasih!`;
 
-                const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`;
-                window.open(waUrl, '_blank');
+                // LOGIKA FLEXIBLE WA.ME vs WA GATEWAY
+                if (json.wa_sent === true) {
+                    alert("Pesanan berhasil dibuat! Struk & detail telah dikirim otomatis ke WhatsApp Anda."); 
+                } else {
+                    const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`;
+                    window.open(waUrl, '_blank');
+                    alert("Pesanan berhasil dibuat! Anda akan diarahkan ke WhatsApp."); 
+                }
                 
                 cart = []; 
                 updateCartUI(); 
                 toggleCart(); 
-                alert("Pesanan berhasil dibuat! Anda akan diarahkan ke WhatsApp."); 
                 
                 // Diam-diam update katalog kalau stok berkurang
                 fetchStoreCatalog();
