@@ -395,8 +395,18 @@
         let secretTapTimer;
 
         // 1. Ambil Parameter Slug Toko
-        const urlParams = new URLSearchParams(window.location.search);
-        const storeSlug = urlParams.get('t');
+        // 1. Ambil Parameter Slug Toko
+const urlParams = new URLSearchParams(window.location.search);
+let storeSlug = urlParams.get('t');
+
+// --- TAMBAHAN BARU UNTUK BACA URL VERCEL REWRITES ---
+if (!storeSlug) {
+    // Membaca path "/toko-demo" menjadi "toko-demo"
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    if (pathSegments.length > 0) {
+        storeSlug = pathSegments[0]; 
+    }
+}
 
         // 2. Fetch Data Toko & Katalog
         async function fetchStoreCatalog() {
