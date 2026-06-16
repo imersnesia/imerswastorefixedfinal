@@ -1,9 +1,8 @@
 {
-"cleanUrls": true,
-"rewrites": [
-{
-"source": "/:toko",
-"destination": "/toko.html?t=:toko"
-}
-]
+  "rewrites": [
+    {
+      "source": "/:tokoSlug",
+      "destination": "/toko.html?t=:tokoSlug"
+    }
+  ]
 }
