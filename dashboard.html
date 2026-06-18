@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Judul bawaan dibikin netral, tidak ada jejak iMersWAstore -->
     <title>Dashboard - Panel Admin</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -98,18 +99,29 @@
             console.error("Error cek sesi:", e);
         }
 
-        // URL Web App Google Apps Script lo
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwKbN_R8gdRG5_jLniXD0LXZSMTUiU8gO5Ae-s3FAnfxV7gpaRstdovRiJbS_izuZeQpw/exec';
+        // =========================================================================
+        // URL WEB APP GOOGLE APPS SCRIPT
+        // =========================================================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw5b-MqpGYCHgQzQtQrf2lIOoWs71CAARJBnRL4ALiJwxI5jbkNJ680zzXgv-KWWRES/exec';
     </script>
 
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-slate-900/50 z-50 hidden lg:hidden"></div>
+
     <!-- Sidebar -->
-    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col h-full z-20 transition-all shrink-0">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-[60] w-64 bg-white border-r border-slate-200 flex flex-col h-full transition-transform duration-300 transform -translate-x-full lg:relative lg:translate-x-0 shrink-0">
         <!-- Logo Brand Dinamis -->
-        <div class="h-16 flex items-center px-6 border-b border-slate-100 cursor-pointer" onclick="window.location.href='index.html'">
-            <div id="sidebarBrandLogo" class="w-8 h-8 bg-emerald-500 text-white p-1.5 rounded-lg mr-2 flex items-center justify-center overflow-hidden shrink-0">
-                <i data-lucide="store" class="w-5 h-5"></i>
+        <div class="h-16 flex items-center justify-between px-6 border-b border-slate-100 cursor-pointer">
+            <div class="flex items-center" onclick="window.location.href='index.html'">
+                <div id="sidebarBrandLogo" class="w-8 h-8 bg-emerald-500 text-white p-1.5 rounded-lg mr-2 flex items-center justify-center overflow-hidden shrink-0">
+                    <i data-lucide="store" class="w-5 h-5"></i>
+                </div>
+                <span id="sidebarBrandName" class="font-bold text-lg tracking-tight truncate">iMers<span class="text-emerald-500">WA</span></span>
             </div>
-            <span id="sidebarBrandName" class="font-bold text-lg tracking-tight truncate">iMers<span class="text-emerald-500">WA</span></span>
+            <!-- Tombol Close (Mobile Only) -->
+            <button id="closeSidebarBtn" class="lg:hidden text-slate-400 hover:text-slate-600 focus:outline-none">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
         </div>
 
         <!-- User Info -->
@@ -145,14 +157,20 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden relative w-full">
         
         <!-- Header -->
-        <header class="h-16 bg-white border-b border-slate-200 flex items-center px-8 justify-between z-10 shadow-sm shrink-0">
-            <h1 class="text-xl font-bold text-slate-800" id="pageTitle">Dashboard</h1>
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center px-4 md:px-8 justify-between z-10 shadow-sm shrink-0">
+            <div class="flex items-center gap-3">
+                <!-- Hamburger Menu (Mobile Only) -->
+                <button id="mobileMenuBtn" class="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg focus:outline-none">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+                <h1 class="text-lg md:text-xl font-bold text-slate-800" id="pageTitle">Dashboard</h1>
+            </div>
             <div class="flex items-center gap-4">
-                <span id="statusBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider hidden"></span>
-                <div class="text-sm text-slate-500 font-medium" id="headerDate">Hari Ini</div>
+                <span id="statusBadge" class="px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider hidden"></span>
+                <div class="text-xs sm:text-sm text-slate-500 font-medium hidden sm:block" id="headerDate">Hari Ini</div>
             </div>
         </header>
 
@@ -167,85 +185,85 @@
             <!-- ========================================== -->
             <div id="view-dashboard" class="view-section max-w-6xl mx-auto space-y-6">
                 
-                <!-- Banner Upgrade Otomatis (Khusus User) DITAMBAHKAN DI SINI -->
+                <!-- Banner Upgrade Otomatis (Khusus User) -->
                 <div id="upgradeBannerArea" class="hidden bg-gradient-to-r from-amber-400 to-orange-500 rounded-2xl p-6 shadow-md relative overflow-hidden text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div class="absolute right-0 top-0 opacity-10">
                         <i data-lucide="rocket" class="w-32 h-32 -mr-4 -mt-4"></i>
                     </div>
                     <div class="relative z-10">
-                        <h3 class="text-xl font-bold mb-1">🔥 Tingkatkan Performa Bisnis Anda!</h3>
-                        <p class="text-amber-50 text-sm">Akses semua fitur premium tanpa batas. Bebas pilih paket yang sesuai dengan kebutuhan Anda.</p>
+                        <h3 class="text-lg sm:text-xl font-bold mb-1">🔥 Tingkatkan Performa Bisnis Anda!</h3>
+                        <p class="text-amber-50 text-xs sm:text-sm">Akses semua fitur premium tanpa batas. Bebas pilih paket yang sesuai dengan kebutuhan Anda.</p>
                     </div>
-                    <button onclick="openUpgradeModal()" class="relative z-10 bg-white text-orange-600 hover:bg-amber-50 px-6 py-3 rounded-xl font-bold shadow-sm transition-colors shrink-0 w-full sm:w-auto">
+                    <button onclick="openUpgradeModal()" class="relative z-10 bg-white text-orange-600 hover:bg-amber-50 px-6 py-3 rounded-xl font-bold shadow-sm transition-colors shrink-0 w-full sm:w-auto text-sm sm:text-base">
                         Upgrade Sekarang
                     </button>
                 </div>
 
                 <!-- Welcome Banner -->
-                <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl p-6 shadow-md relative overflow-hidden text-white">
-                    <div class="absolute right-0 top-0 opacity-10">
+                <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl p-5 sm:p-6 shadow-md relative overflow-hidden text-white">
+                    <div class="absolute right-0 top-0 opacity-10 hidden sm:block">
                         <i data-lucide="trending-up" class="w-48 h-48 -mr-10 -mt-10"></i>
                     </div>
                     <div class="relative z-10">
-                        <h2 class="text-2xl font-bold mb-1">Selamat datang kembali, <span id="welcomeName">User</span>! 👋</h2>
-                        <p class="text-emerald-50 text-sm">Berikut adalah ringkasan aktivitas toko Anda hari ini.</p>
+                        <h2 class="text-xl sm:text-2xl font-bold mb-1">Selamat datang kembali, <span id="welcomeName">User</span>! 👋</h2>
+                        <p class="text-emerald-50 text-xs sm:text-sm">Berikut adalah ringkasan aktivitas toko Anda hari ini.</p>
                     </div>
                 </div>
 
                 <!-- Stats Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-sm font-medium text-slate-500">Pendapatan (Total)</h3>
-                            <div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                                <i data-lucide="wallet" class="w-4 h-4"></i>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                    <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-3 sm:mb-4">
+                            <h3 class="text-xs sm:text-sm font-medium text-slate-500">Pendapatan</h3>
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                                <i data-lucide="wallet" class="w-3 h-3 sm:w-4 sm:h-4"></i>
                             </div>
                         </div>
-                        <div class="text-2xl font-bold text-slate-800" id="dashTotalSales">Rp 0</div>
+                        <div class="text-lg sm:text-2xl font-bold text-slate-800 break-all" id="dashTotalSales">Rp 0</div>
                     </div>
                     
-                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-sm font-medium text-slate-500">Total Pesanan</h3>
-                            <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
-                                <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                    <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-3 sm:mb-4">
+                            <h3 class="text-xs sm:text-sm font-medium text-slate-500">Total Order</h3>
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                                <i data-lucide="shopping-bag" class="w-3 h-3 sm:w-4 sm:h-4"></i>
                             </div>
                         </div>
-                        <div class="text-2xl font-bold text-slate-800" id="dashOrderCount">0</div>
+                        <div class="text-lg sm:text-2xl font-bold text-slate-800 break-all" id="dashOrderCount">0</div>
                     </div>
 
-                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-sm font-medium text-slate-500">Pesanan Pending</h3>
-                            <div class="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
-                                <i data-lucide="clock" class="w-4 h-4"></i>
+                    <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-3 sm:mb-4">
+                            <h3 class="text-xs sm:text-sm font-medium text-slate-500">Pending</h3>
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                                <i data-lucide="clock" class="w-3 h-3 sm:w-4 sm:h-4"></i>
                             </div>
                         </div>
-                        <div class="text-2xl font-bold text-slate-800" id="dashPendingCount">0</div>
+                        <div class="text-lg sm:text-2xl font-bold text-slate-800 break-all" id="dashPendingCount">0</div>
                     </div>
                     
-                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-sm font-medium text-slate-500">Total Produk Katalog</h3>
-                            <div class="w-8 h-8 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
-                                <i data-lucide="package" class="w-4 h-4"></i>
+                    <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-3 sm:mb-4">
+                            <h3 class="text-xs sm:text-sm font-medium text-slate-500">Katalog</h3>
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+                                <i data-lucide="package" class="w-3 h-3 sm:w-4 sm:h-4"></i>
                             </div>
                         </div>
-                        <div class="text-2xl font-bold text-slate-800" id="dashProdCount">0</div>
+                        <div class="text-lg sm:text-2xl font-bold text-slate-800 break-all" id="dashProdCount">0</div>
                     </div>
                 </div>
 
                 <!-- Charts Section -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-2">
-                    <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                    <div class="lg:col-span-2 bg-white p-4 sm:p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col">
                         <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2"><i data-lucide="trending-up" class="w-4 h-4 text-emerald-500"></i> Grafik Pendapatan (7 Hari Terakhir)</h3>
-                        <div class="relative flex-1 w-full min-h-[250px]">
+                        <div class="relative flex-1 w-full min-h-[200px] sm:min-h-[250px]">
                             <canvas id="salesChart"></canvas>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                    <div class="bg-white p-4 sm:p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col">
                         <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2"><i data-lucide="pie-chart" class="w-4 h-4 text-blue-500"></i> Produk Terlaris</h3>
-                        <div class="relative flex-1 w-full min-h-[250px] flex items-center justify-center">
+                        <div class="relative flex-1 w-full min-h-[200px] sm:min-h-[250px] flex items-center justify-center">
                             <canvas id="topProductsChart"></canvas>
                         </div>
                     </div>
@@ -256,12 +274,12 @@
             <!-- VIEW: MANAJEMEN USER (Hanya Admin/Agency)-->
             <!-- ========================================== -->
             <div id="view-users" class="view-section hidden max-w-6xl mx-auto space-y-6">
-                <div class="flex justify-between items-center bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-slate-800">Manajemen Pengguna</h2>
-                        <p class="text-sm text-slate-500">Kelola akun toko di bawah jaringan Anda.</p>
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-800">Manajemen Pengguna</h2>
+                        <p class="text-xs sm:text-sm text-slate-500">Kelola akun toko di bawah jaringan Anda.</p>
                     </div>
-                    <button onclick="openUserModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center gap-2">
+                    <button onclick="openUserModal()" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex justify-center items-center gap-2">
                         <i data-lucide="user-plus" class="w-4 h-4"></i> Buat Toko Baru
                     </button>
                 </div>
@@ -270,11 +288,11 @@
                     <table class="w-full text-left text-sm whitespace-nowrap">
                         <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
                             <tr>
-                                <th class="px-6 py-4">Toko & Info</th>
-                                <th class="px-6 py-4">Role</th>
-                                <th class="px-6 py-4">Status</th>
-                                <th class="px-6 py-4">Expired</th>
-                                <th class="px-6 py-4 text-right">Aksi</th>
+                                <th class="px-4 sm:px-6 py-4">Toko & Info</th>
+                                <th class="px-4 sm:px-6 py-4">Role</th>
+                                <th class="px-4 sm:px-6 py-4">Status</th>
+                                <th class="px-4 sm:px-6 py-4">Expired</th>
+                                <th class="px-4 sm:px-6 py-4 text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100" id="usersTableBody">
@@ -290,12 +308,12 @@
             <!-- VIEW: KELOLA PAKET HARGA (Hanya Super Admin)-->
             <!-- ========================================== -->
             <div id="view-plans" class="view-section hidden max-w-6xl mx-auto space-y-6">
-                <div class="flex justify-between items-center bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-slate-800">Paket Harga (Pricing Plans)</h2>
-                        <p class="text-sm text-slate-500">Buat dan kelola paket langganan yang akan muncul di pop-up upgrade user.</p>
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-800">Paket Harga (Pricing Plans)</h2>
+                        <p class="text-xs sm:text-sm text-slate-500">Buat dan kelola paket langganan yang akan muncul di pop-up upgrade user.</p>
                     </div>
-                    <button onclick="openPlanModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center gap-2">
+                    <button onclick="openPlanModal()" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex justify-center items-center gap-2">
                         <i data-lucide="plus" class="w-4 h-4"></i> Tambah Paket
                     </button>
                 </div>
@@ -304,11 +322,11 @@
                     <table class="w-full text-left text-sm whitespace-nowrap">
                         <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
                             <tr>
-                                <th class="px-6 py-4">Nama Paket</th>
-                                <th class="px-6 py-4">Harga (Rp)</th>
-                                <th class="px-6 py-4">Role Hasil Upgrade</th>
-                                <th class="px-6 py-4">Status</th>
-                                <th class="px-6 py-4 text-right">Aksi</th>
+                                <th class="px-4 sm:px-6 py-4">Nama Paket</th>
+                                <th class="px-4 sm:px-6 py-4">Harga (Rp)</th>
+                                <th class="px-4 sm:px-6 py-4">Role Hasil Upgrade</th>
+                                <th class="px-4 sm:px-6 py-4">Status</th>
+                                <th class="px-4 sm:px-6 py-4 text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100" id="planTableBody">
@@ -324,12 +342,12 @@
             <!-- VIEW: KATALOG PRODUK -->
             <!-- ========================================== -->
             <div id="view-prod" class="view-section hidden max-w-6xl mx-auto space-y-6">
-                <div class="flex justify-between items-center bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-slate-800">Katalog Produk</h2>
-                        <p class="text-sm text-slate-500">Kelola daftar produk, varian (warna/size), harga, dan stok Anda.</p>
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-800">Katalog Produk</h2>
+                        <p class="text-xs sm:text-sm text-slate-500">Kelola daftar produk, varian (warna/size), harga, dan stok Anda.</p>
                     </div>
-                    <button onclick="openProductModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center gap-2">
+                    <button onclick="openProductModal()" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex justify-center items-center gap-2">
                         <i data-lucide="plus" class="w-4 h-4"></i> Tambah Produk
                     </button>
                 </div>
@@ -338,10 +356,10 @@
                     <table class="w-full text-left text-sm whitespace-nowrap">
                         <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
                             <tr>
-                                <th class="px-6 py-4">Produk & Kategori</th>
-                                <th class="px-6 py-4">Harga</th>
-                                <th class="px-6 py-4">Stok / Varian</th>
-                                <th class="px-6 py-4 text-right">Aksi</th>
+                                <th class="px-4 sm:px-6 py-4">Produk & Kategori</th>
+                                <th class="px-4 sm:px-6 py-4">Harga</th>
+                                <th class="px-4 sm:px-6 py-4">Stok / Varian</th>
+                                <th class="px-4 sm:px-6 py-4 text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100" id="productTableBody">
@@ -357,12 +375,12 @@
             <!-- VIEW: KATEGORI PRODUK -->
             <!-- ========================================== -->
             <div id="view-kategori" class="view-section hidden max-w-6xl mx-auto space-y-6">
-                <div class="flex justify-between items-center bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-slate-800">Kategori Produk</h2>
-                        <p class="text-sm text-slate-500">Kelompokkan produk Anda untuk memudahkan pelanggan mencari barang.</p>
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-800">Kategori Produk</h2>
+                        <p class="text-xs sm:text-sm text-slate-500">Kelompokkan produk Anda untuk memudahkan pelanggan mencari barang.</p>
                     </div>
-                    <button onclick="openCategoryModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center gap-2">
+                    <button onclick="openCategoryModal()" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex justify-center items-center gap-2">
                         <i data-lucide="plus" class="w-4 h-4"></i> Tambah Kategori
                     </button>
                 </div>
@@ -370,10 +388,10 @@
                     <table class="w-full text-left text-sm whitespace-nowrap">
                         <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
                             <tr>
-                                <th class="px-6 py-4 w-20">Urutan</th>
-                                <th class="px-6 py-4">Nama Kategori</th>
-                                <th class="px-6 py-4">Status Tampil</th>
-                                <th class="px-6 py-4 text-right">Aksi</th>
+                                <th class="px-4 sm:px-6 py-4 w-16 sm:w-20">Urutan</th>
+                                <th class="px-4 sm:px-6 py-4">Nama Kategori</th>
+                                <th class="px-4 sm:px-6 py-4">Status Tampil</th>
+                                <th class="px-4 sm:px-6 py-4 text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100" id="categoryTableBody">
@@ -387,12 +405,12 @@
             <!-- VIEW: KUPON DISKON -->
             <!-- ========================================== -->
             <div id="view-kupon" class="view-section hidden max-w-6xl mx-auto space-y-6">
-                <div class="flex justify-between items-center bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-slate-800">Kupon Diskon</h2>
-                        <p class="text-sm text-slate-500">Buat kode promo untuk menarik pelanggan berbelanja lebih banyak.</p>
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-800">Kupon Diskon</h2>
+                        <p class="text-xs sm:text-sm text-slate-500">Buat kode promo untuk menarik pelanggan berbelanja lebih banyak.</p>
                     </div>
-                    <button onclick="openCouponModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center gap-2">
+                    <button onclick="openCouponModal()" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex justify-center items-center gap-2">
                         <i data-lucide="plus" class="w-4 h-4"></i> Buat Kupon
                     </button>
                 </div>
@@ -400,11 +418,11 @@
                     <table class="w-full text-left text-sm whitespace-nowrap">
                         <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
                             <tr>
-                                <th class="px-6 py-4">Kode Kupon</th>
-                                <th class="px-6 py-4">Nilai Diskon</th>
-                                <th class="px-6 py-4">Min. Belanja</th>
-                                <th class="px-6 py-4">Status</th>
-                                <th class="px-6 py-4 text-right">Aksi</th>
+                                <th class="px-4 sm:px-6 py-4">Kode Kupon</th>
+                                <th class="px-4 sm:px-6 py-4">Nilai Diskon</th>
+                                <th class="px-4 sm:px-6 py-4">Min. Belanja</th>
+                                <th class="px-4 sm:px-6 py-4">Status</th>
+                                <th class="px-4 sm:px-6 py-4 text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100" id="couponTableBody">
@@ -418,12 +436,12 @@
             <!-- VIEW: ONGKIR MANUAL -->
             <!-- ========================================== -->
             <div id="view-ongkir" class="view-section hidden max-w-6xl mx-auto space-y-6">
-                <div class="flex justify-between items-center bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-slate-800">Tarif Pengiriman (Manual)</h2>
-                        <p class="text-sm text-slate-500">Atur area pengiriman dan tarif ongkos kirim secara manual untuk checkout.</p>
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-800">Tarif Pengiriman (Manual)</h2>
+                        <p class="text-xs sm:text-sm text-slate-500">Atur area pengiriman dan tarif ongkos kirim secara manual untuk checkout.</p>
                     </div>
-                    <button onclick="openShippingModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center gap-2">
+                    <button onclick="openShippingModal()" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex justify-center items-center gap-2">
                         <i data-lucide="plus" class="w-4 h-4"></i> Tambah Area
                     </button>
                 </div>
@@ -431,9 +449,9 @@
                     <table class="w-full text-left text-sm whitespace-nowrap">
                         <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
                             <tr>
-                                <th class="px-6 py-4">Nama Area / Layanan Pengiriman</th>
-                                <th class="px-6 py-4">Tarif Ongkos Kirim</th>
-                                <th class="px-6 py-4 text-right">Aksi</th>
+                                <th class="px-4 sm:px-6 py-4">Nama Area / Layanan Pengiriman</th>
+                                <th class="px-4 sm:px-6 py-4">Tarif Ongkos Kirim</th>
+                                <th class="px-4 sm:px-6 py-4 text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100" id="shippingTableBody">
@@ -447,21 +465,21 @@
             <!-- VIEW: PESANAN MASUK -->
             <!-- ========================================== -->
             <div id="view-order" class="view-section hidden max-w-6xl mx-auto space-y-6">
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                    <h2 class="text-xl font-bold text-slate-800 mb-1">Pesanan Masuk</h2>
-                    <p class="text-sm text-slate-500">Daftar riwayat pesanan dari Kasir POS dan Toko Online.</p>
+                <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-800 mb-1">Pesanan Masuk</h2>
+                    <p class="text-xs sm:text-sm text-slate-500">Daftar riwayat pesanan dari Kasir POS dan Toko Online.</p>
                 </div>
 
                 <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
                     <table class="w-full text-left text-sm whitespace-nowrap">
                         <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
                             <tr>
-                                <th class="px-6 py-4">Order ID & Waktu</th>
-                                <th class="px-6 py-4">Pelanggan & Kontak</th>
-                                <th class="px-6 py-4">Rincian Barang</th>
-                                <th class="px-6 py-4">Rincian Biaya</th>
-                                <th class="px-6 py-4">Status</th>
-                                <th class="px-6 py-4 text-right">Aksi</th>
+                                <th class="px-4 sm:px-6 py-4">Order ID & Waktu</th>
+                                <th class="px-4 sm:px-6 py-4">Pelanggan & Kontak</th>
+                                <th class="px-4 sm:px-6 py-4">Rincian Barang</th>
+                                <th class="px-4 sm:px-6 py-4">Rincian Biaya</th>
+                                <th class="px-4 sm:px-6 py-4">Status</th>
+                                <th class="px-4 sm:px-6 py-4 text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100" id="orderTableBody">
@@ -477,25 +495,26 @@
             <!-- VIEW: KASIR POS -->
             <!-- ========================================== -->
             <div id="view-pos" class="view-section hidden max-w-full h-full">
-                <div class="flex flex-col lg:flex-row gap-6 h-[calc(100vh-140px)]">
+                <!-- Ubah flex-col lg:flex-row agar di mobile memanjang ke bawah (scrollable) -->
+                <div class="flex flex-col lg:flex-row gap-6 lg:h-[calc(100vh-140px)] min-h-screen lg:min-h-0">
                     
                     <!-- Kiri: Grid Produk -->
-                    <div class="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-                        <div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
+                    <div class="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[60vh] lg:h-auto">
+                        <div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center gap-3 shrink-0">
                             <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
                             <input type="text" id="posSearch" placeholder="Cari nama produk..." oninput="filterPOS()" class="w-full bg-transparent border-none focus:outline-none text-sm font-medium">
                         </div>
                         
                         <div class="p-4 overflow-y-auto flex-1 bg-slate-50">
-                            <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4" id="posProductGrid">
+                            <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4" id="posProductGrid">
                                 <!-- Diisi JS -->
                             </div>
                         </div>
                     </div>
 
                     <!-- Kanan: Keranjang Kasir -->
-                    <div class="w-full lg:w-96 shrink-0 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
-                        <div class="p-4 border-b border-slate-100 bg-emerald-500 text-white flex justify-between items-center rounded-t-xl">
+                    <div class="w-full lg:w-96 shrink-0 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col h-[50vh] lg:h-auto">
+                        <div class="p-4 border-b border-slate-100 bg-emerald-500 text-white flex justify-between items-center rounded-t-xl shrink-0">
                             <h3 class="font-bold flex items-center gap-2"><i data-lucide="shopping-cart" class="w-5 h-5"></i> Keranjang</h3>
                             <button onclick="clearCart()" class="text-xs bg-emerald-600 hover:bg-emerald-700 px-2 py-1 rounded transition-colors">Kosongkan</button>
                         </div>
@@ -506,13 +525,13 @@
                         </div>
 
                         <!-- Summary & Checkout -->
-                        <div class="p-4 border-t border-slate-100 bg-slate-50 rounded-b-xl space-y-3">
+                        <div class="p-4 border-t border-slate-100 bg-slate-50 rounded-b-xl space-y-3 shrink-0">
                             <div class="flex justify-between items-center text-sm font-medium text-slate-600">
                                 <span>Subtotal</span>
                                 <span id="cartSubtotalVal">Rp 0</span>
                             </div>
                             <!-- Panggil Checkout Modal -->
-                            <button onclick="openCheckoutModal()" class="w-full py-3 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 shadow-lg flex justify-center items-center gap-2 transition-all">
+                            <button onclick="openCheckoutModal()" class="w-full py-3.5 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 shadow-lg flex justify-center items-center gap-2 transition-all">
                                 <i data-lucide="arrow-right-circle" class="w-5 h-5"></i> Lanjut Pembayaran
                             </button>
                         </div>
@@ -525,13 +544,13 @@
             <!-- VIEW: VIDEO PANDUAN (TUTORIAL PLAYLIST) -->
             <!-- ========================================== -->
             <div id="view-tutorial" class="view-section hidden max-w-6xl mx-auto space-y-6">
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <div>
-                        <h2 class="text-xl font-bold text-slate-800 mb-1">Video Panduan</h2>
-                        <p class="text-sm text-slate-500">Pelajari cara menggunakan sistem dan memaksimalkan penjualan Anda.</p>
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-800 mb-1">Video Panduan</h2>
+                        <p class="text-xs sm:text-sm text-slate-500">Pelajari cara menggunakan sistem dan memaksimalkan penjualan Anda.</p>
                     </div>
-                    <div class="w-12 h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center shrink-0">
-                        <i data-lucide="youtube" class="w-6 h-6"></i>
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+                        <i data-lucide="youtube" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                     </div>
                 </div>
 
@@ -541,16 +560,16 @@
                         <div class="aspect-video bg-slate-900 w-full relative">
                             <iframe id="tutorialIframe" class="absolute inset-0 w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
-                        <div class="p-6">
-                            <h3 class="font-bold text-lg text-slate-800">Materi Pembelajaran</h3>
-                            <p class="text-sm text-slate-500 mt-1">Silakan pilih video dari daftar putar di samping untuk mulai belajar.</p>
+                        <div class="p-5 sm:p-6">
+                            <h3 class="font-bold text-base sm:text-lg text-slate-800">Materi Pembelajaran</h3>
+                            <p class="text-xs sm:text-sm text-slate-500 mt-1">Silakan pilih video dari daftar putar di samping untuk mulai belajar.</p>
                         </div>
                     </div>
 
                     <!-- Kanan: Playlist -->
-                    <div class="w-full lg:w-80 shrink-0 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col h-[400px] lg:h-auto max-h-[600px]">
-                        <div class="p-5 border-b border-slate-100 bg-slate-50 rounded-t-xl shrink-0">
-                            <h3 class="font-bold text-slate-800 flex items-center gap-2"><i data-lucide="list-video" class="w-5 h-5 text-emerald-500"></i> Daftar Putar</h3>
+                    <div class="w-full lg:w-80 shrink-0 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col h-[300px] sm:h-[400px] lg:h-auto max-h-[600px]">
+                        <div class="p-4 sm:p-5 border-b border-slate-100 bg-slate-50 rounded-t-xl shrink-0">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2 text-sm sm:text-base"><i data-lucide="list-video" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500"></i> Daftar Putar</h3>
                         </div>
                         <div class="flex-1 overflow-y-auto" id="tutorialPlaylist">
                             <!-- Diisi oleh JS -->
@@ -564,80 +583,80 @@
             <!-- VIEW: PENGATURAN -->
             <!-- ========================================== -->
             <div id="view-set" class="view-section hidden max-w-3xl mx-auto space-y-6 pb-10">
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                    <h2 class="text-xl font-bold text-slate-800 mb-1">Pengaturan & Profil Toko</h2>
-                    <p class="text-sm text-slate-500">Sesuaikan identitas bisnis, keamanan akun, integrasi WhatsApp, dan metode pembayaran Anda.</p>
+                <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-800 mb-1">Pengaturan & Profil Toko</h2>
+                    <p class="text-xs sm:text-sm text-slate-500">Sesuaikan identitas bisnis, keamanan akun, integrasi WhatsApp, dan metode pembayaran Anda.</p>
                 </div>
 
                 <!-- Form Profil Toko -->
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2 border-b pb-2">
-                        <i data-lucide="store" class="w-5 h-5 text-emerald-500"></i> Profil Toko & Integrasi
+                <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2 border-b pb-2 text-sm sm:text-base">
+                        <i data-lucide="store" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500"></i> Profil Toko & Integrasi
                     </h3>
                     
                     <form id="settingForm" class="space-y-5">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Nama Toko</label>
-                                <input type="text" id="setNamaToko" required class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm">
+                                <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Nama Toko</label>
+                                <input type="text" id="setNamaToko" required class="w-full px-3 sm:px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Slug URL Toko</label>
+                                <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Slug URL Toko</label>
                                 <div class="flex rounded-lg shadow-sm">
-                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-slate-300 bg-slate-50 text-slate-500 text-xs">toko.com/</span>
+                                    <span class="inline-flex items-center px-2 sm:px-3 rounded-l-md border border-r-0 border-slate-300 bg-slate-50 text-slate-500 text-xs">toko.com/</span>
                                     <input type="text" id="setSlugToko" required class="flex-1 min-w-0 block w-full px-3 py-2.5 rounded-none rounded-r-lg border border-slate-300 focus:outline-none focus:border-emerald-500 text-sm">
                                 </div>
                             </div>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">URL Logo Toko (Opsional)</label>
-                            <input type="url" id="setLogo" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="https://...">
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">URL Logo Toko (Opsional)</label>
+                            <input type="url" id="setLogo" class="w-full px-3 sm:px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="https://...">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nomor WhatsApp Penerima Order (Mulai dengan 62)</label>
-                            <input type="tel" id="setWaNumber" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="628123456789">
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Nomor WhatsApp Penerima Order (Mulai dengan 62)</label>
+                            <input type="tel" id="setWaNumber" class="w-full px-3 sm:px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="628123456789">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Teks Sambutan Auto-Reply WhatsApp</label>
-                            <textarea id="setAutoReply" rows="2" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm"></textarea>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Teks Sambutan Auto-Reply WhatsApp</label>
+                            <textarea id="setAutoReply" rows="2" class="w-full px-3 sm:px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm"></textarea>
                         </div>
                         
                         <!-- FITUR DESAIN TOKO (Warna & Banner) -->
-                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1">Desain & Tampilan Toko</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1 text-sm sm:text-base">Desain & Tampilan Toko</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 pt-2">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Warna Tema (Background)</label>
+                                <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Warna Tema (Background)</label>
                                 <div class="flex items-center gap-3">
                                     <input type="color" id="setThemeColor" class="h-10 w-16 p-1 border border-slate-200 rounded cursor-pointer" value="#f8fafc">
                                     <span class="text-xs text-slate-500">Pilih warna untuk background toko online Anda</span>
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">URL Banner Slider Toko (Opsional)</label>
-                                <input type="url" id="setBannerUrl" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="https://link-gambar-banner">
+                                <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">URL Banner Slider Toko (Opsional)</label>
+                                <input type="url" id="setBannerUrl" class="w-full px-3 sm:px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="https://link-gambar-banner">
                             </div>
                         </div>
 
                         <!-- Form QRIS & Bank -->
-                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1">Integrasi Pembayaran</h4>
+                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1 text-sm sm:text-base">Integrasi Pembayaran</h4>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">URL Gambar QRIS Statis (Opsional)</label>
-                            <input type="url" id="setQris" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="https://link-gambar-qris-anda">
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">URL Gambar QRIS Statis (Opsional)</label>
+                            <input type="url" id="setQris" class="w-full px-3 sm:px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="https://link-gambar-qris-anda">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Info Transfer Bank Manual (Opsional)</label>
-                            <input type="text" id="setBank" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="BCA 12345678 a/n Budi">
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Info Transfer Bank Manual (Opsional)</label>
+                            <input type="text" id="setBank" class="w-full px-3 sm:px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="BCA 12345678 a/n Budi">
                         </div>
                         
                         <!-- MULTI PROVIDER WA GATEWAY -->
-                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1">Integrasi WA Gateway</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1 text-sm sm:text-base">Integrasi WA Gateway</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 pt-2">
                             <div>
-                                <label class="block text-sm font-medium text-emerald-600 mb-1">Provider WA Gateway</label>
-                                <select id="setGatewayProvider" class="w-full px-4 py-2.5 border border-emerald-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white">
+                                <label class="block text-xs sm:text-sm font-medium text-emerald-600 mb-1">Provider WA Gateway</label>
+                                <select id="setGatewayProvider" class="w-full px-3 sm:px-4 py-2.5 border border-emerald-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white">
                                     <option value="fonnte">Fonnte</option>
                                     <option value="waplus">WAplus</option>
                                     <option value="starsender">StarSender</option>
@@ -645,44 +664,44 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-emerald-600 mb-1">API Token / Device Key</label>
-                                <input type="text" id="setGatewayToken" class="w-full px-4 py-2.5 border border-emerald-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Masukkan Token API Anda">
+                                <label class="block text-xs sm:text-sm font-medium text-emerald-600 mb-1">API Token / Device Key</label>
+                                <input type="text" id="setGatewayToken" class="w-full px-3 sm:px-4 py-2.5 border border-emerald-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Masukkan Token API Anda">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-emerald-600 mb-1">Nomor Device / Sender WA</label>
-                            <input type="text" id="setGatewaySender" class="w-full px-4 py-2.5 border border-emerald-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="62812xxx (Wajib untuk WAplus)">
+                            <label class="block text-xs sm:text-sm font-medium text-emerald-600 mb-1">Nomor Device / Sender WA</label>
+                            <input type="text" id="setGatewaySender" class="w-full px-3 sm:px-4 py-2.5 border border-emerald-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="62812xxx (Wajib untuk WAplus/Xsender)">
                             <p class="text-[10px] text-slate-500 mt-1">Jika dikonfigurasi, struk POS dan Lupa Password akan dikirim otomatis ke WhatsApp pelanggan.</p>
                         </div>
 
                         <!-- FITUR TEMPLATE NOTIFIKASI DINAMIS -->
-                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1 flex items-center gap-2"><i data-lucide="message-square-dashed" class="w-5 h-5 text-indigo-500"></i> Template Notifikasi WhatsApp</h4>
+                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1 flex items-center gap-2 text-sm sm:text-base"><i data-lucide="message-square-dashed" class="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500"></i> Template Notifikasi WhatsApp</h4>
                         <p class="text-[10px] text-slate-500 mb-3">Sesuaikan isi pesan yang akan dikirim otomatis oleh bot WA Anda. Gunakan tag [KATA] agar berubah otomatis jadi data asli.</p>
                         
                         <div class="space-y-4 bg-slate-50 p-4 border border-slate-200 rounded-xl">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Pesan Sambutan (Toko Baru)</label>
-                                <p class="text-[10px] text-slate-500 mb-1">Tag tersedia: <b class="text-indigo-600">[NAMA_TOKO], [USERNAME], [PASSWORD]</b></p>
-                                <textarea id="setNotifWelcome" rows="3" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Halo [NAMA_TOKO]..."></textarea>
+                                <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Pesan Sambutan (Toko Baru)</label>
+                                <p class="text-[9px] sm:text-[10px] text-slate-500 mb-1">Tag tersedia: <b class="text-indigo-600">[NAMA_TOKO], [USERNAME], [PASSWORD]</b></p>
+                                <textarea id="setNotifWelcome" rows="3" class="w-full px-3 sm:px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Halo [NAMA_TOKO]..."></textarea>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Pesan Lupa Password</label>
-                                <p class="text-[10px] text-slate-500 mb-1">Tag tersedia: <b class="text-indigo-600">[NAMA_TOKO], [USERNAME], [PASSWORD]</b></p>
-                                <textarea id="setNotifForgot" rows="3" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Password baru Anda adalah [PASSWORD]..."></textarea>
+                                <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Pesan Lupa Password</label>
+                                <p class="text-[9px] sm:text-[10px] text-slate-500 mb-1">Tag tersedia: <b class="text-indigo-600">[NAMA_TOKO], [USERNAME], [PASSWORD]</b></p>
+                                <textarea id="setNotifForgot" rows="3" class="w-full px-3 sm:px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Password baru Anda adalah [PASSWORD]..."></textarea>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Pesan Struk Order (Checkout)</label>
-                                <p class="text-[10px] text-slate-500 mb-1">Tag tersedia: <b class="text-indigo-600">[NAMA_PEMBELI], [ORDER_ID], [SUBTOTAL], [ONGKIR], [DISKON], [GRAND_TOTAL], [METODE_BAYAR], [KURIR], [RINCIAN_ORDER]</b></p>
-                                <textarea id="setNotifCheckout" rows="4" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Terima kasih [NAMA_PEMBELI], total belanja Anda [GRAND_TOTAL]..."></textarea>
+                                <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Pesan Struk Order (Checkout)</label>
+                                <p class="text-[9px] sm:text-[10px] text-slate-500 mb-1">Tag tersedia: <b class="text-indigo-600">[NAMA_PEMBELI], [ORDER_ID], [SUBTOTAL], [ONGKIR], [DISKON], [GRAND_TOTAL], [METODE_BAYAR], [KURIR], [RINCIAN_ORDER]</b></p>
+                                <textarea id="setNotifCheckout" rows="4" class="w-full px-3 sm:px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Terima kasih [NAMA_PEMBELI], total belanja Anda [GRAND_TOTAL]..."></textarea>
                             </div>
                         </div>
 
                         <!-- FITUR HALAMAN LEGAL (ToS & Privacy) -->
-                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1 flex items-center gap-2"><i data-lucide="scale" class="w-5 h-5 text-slate-500"></i> Halaman Legal & Kebijakan Toko</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1 flex items-center gap-2 text-sm sm:text-base"><i data-lucide="scale" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-500"></i> Halaman Legal & Kebijakan Toko</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 pt-2">
                             <div class="space-y-2">
                                 <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Terms of Service (Syarat Ketentuan)</label>
+                                    <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Terms of Service (Syarat Ketentuan)</label>
                                     <select id="setTosActive" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white mb-2">
                                         <option value="off">Mati (Sembunyikan dari Footer)</option>
                                         <option value="on">Aktif (Tampilkan di Footer)</option>
@@ -692,7 +711,7 @@
                             </div>
                             <div class="space-y-2">
                                 <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Privacy Policy (Kebijakan Privasi)</label>
+                                    <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Privacy Policy (Kebijakan Privasi)</label>
                                     <select id="setPrivacyActive" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white mb-2">
                                         <option value="off">Mati (Sembunyikan dari Footer)</option>
                                         <option value="on">Aktif (Tampilkan di Footer)</option>
@@ -703,70 +722,70 @@
                         </div>
 
                         <!-- FITUR SECRET TAP LOGIN -->
-                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1">Keamanan Ekstra (Secret Tap Login)</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
+                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1 text-sm sm:text-base">Keamanan Ekstra (Secret Tap Login)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 pt-2">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Status Secret Login</label>
-                                <select id="setSecretStatus" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white">
+                                <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Status Secret Login</label>
+                                <select id="setSecretStatus" class="w-full px-3 sm:px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white">
                                     <option value="off">Mati (Off)</option>
                                     <option value="on">Aktif (On)</option>
                                 </select>
                                 <p class="text-[10px] text-slate-500 mt-1">Sembunyikan login admin di etalase toko.</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Jumlah Ketukan</label>
-                                <input type="number" id="setSecretTap" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="5">
+                                <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Jumlah Ketukan</label>
+                                <input type="number" id="setSecretTap" class="w-full px-3 sm:px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="5">
                                 <p class="text-[10px] text-slate-500 mt-1">Ketuk teks 'Powered by' untuk login.</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">PIN Rahasia</label>
-                                <input type="password" id="setSecretPin" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="1234">
+                                <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">PIN Rahasia</label>
+                                <input type="password" id="setSecretPin" class="w-full px-3 sm:px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="1234">
                             </div>
                         </div>
 
                         <!-- FITUR VIDEO TUTORIAL (PLAYLIST) -->
-                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1 flex items-center gap-2"><i data-lucide="youtube" class="w-5 h-5 text-red-500"></i> Video Panduan (Playlist)</h4>
+                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1 flex items-center gap-2 text-sm sm:text-base"><i data-lucide="youtube" class="w-4 h-4 sm:w-5 sm:h-5 text-red-500"></i> Video Panduan (Playlist)</h4>
                         <p class="text-[10px] text-slate-500">Masukkan link YouTube tutorial untuk ditampilkan di menu Video Panduan user/klien Anda.</p>
                         <div id="tutorialInputsContainer" class="space-y-3 pt-2">
                             <!-- Input dinamis -->
                         </div>
-                        <button type="button" onclick="addTutorialInput()" class="text-sm text-emerald-600 font-bold hover:text-emerald-700 transition-colors flex items-center gap-1"><i data-lucide="plus-circle" class="w-4 h-4"></i> Tambah Video Lainnya</button>
+                        <button type="button" onclick="addTutorialInput()" class="text-xs sm:text-sm text-emerald-600 font-bold hover:text-emerald-700 transition-colors flex items-center gap-1"><i data-lucide="plus-circle" class="w-4 h-4"></i> Tambah Video Lainnya</button>
 
                         <!-- FITUR SOCIAL MEDIA TOKO (DINAMIS) -->
-                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1 flex items-center gap-2"><i data-lucide="share-2" class="w-5 h-5 text-blue-500"></i> Sosial Media Toko</h4>
+                        <h4 class="font-bold text-slate-700 mt-6 border-b pb-1 flex items-center gap-2 text-sm sm:text-base"><i data-lucide="share-2" class="w-4 h-4 sm:w-5 sm:h-5 text-blue-500"></i> Sosial Media Toko</h4>
                         <p class="text-[10px] text-slate-500">Tambahkan link sosial media untuk ditampilkan di footer toko Anda.</p>
                         <div id="socialMediaContainer" class="space-y-3 pt-2">
                             <!-- Input dinamis -->
                         </div>
-                        <button type="button" onclick="addSocialMediaInput()" class="text-sm text-emerald-600 font-bold hover:text-emerald-700 transition-colors flex items-center gap-1"><i data-lucide="plus-circle" class="w-4 h-4"></i> Tambah Sosmed</button>
+                        <button type="button" onclick="addSocialMediaInput()" class="text-xs sm:text-sm text-emerald-600 font-bold hover:text-emerald-700 transition-colors flex items-center gap-1"><i data-lucide="plus-circle" class="w-4 h-4"></i> Tambah Sosmed</button>
 
                         <div class="pt-4">
-                            <button type="submit" id="btnSaveSet" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center w-full justify-center">
+                            <button type="submit" id="btnSaveSet" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center w-full justify-center">
                                 <span id="btnSaveSetText">Simpan Pengaturan</span>
-                                <i data-lucide="loader-2" id="btnSaveSetLoader" class="w-4 h-4 ml-2 animate-spin hidden"></i>
+                                <i data-lucide="loader-2" id="btnSaveSetLoader" class="w-5 h-5 ml-2 animate-spin hidden"></i>
                             </button>
                         </div>
                     </form>
                 </div>
 
                 <!-- Form Ganti Password -->
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2 border-b pb-2">
-                        <i data-lucide="lock" class="w-5 h-5 text-slate-500"></i> Ganti Password Utama
+                <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2 border-b pb-2 text-sm sm:text-base">
+                        <i data-lucide="lock" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-500"></i> Ganti Password Utama
                     </h3>
                     <form id="passwordForm" class="space-y-4 max-w-sm">
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Password Lama</label>
-                            <input type="password" id="oldPass" required class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-500 text-sm">
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Password Lama</label>
+                            <input type="password" id="oldPass" required class="w-full px-3 sm:px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-500 text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Password Baru</label>
-                            <input type="password" id="newPass" required class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-500 text-sm">
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Password Baru</label>
+                            <input type="password" id="newPass" required class="w-full px-3 sm:px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-slate-500 text-sm">
                         </div>
                         <div class="pt-2">
-                            <button type="submit" id="btnSavePass" class="bg-slate-800 hover:bg-slate-900 text-white px-6 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center">
+                            <button type="submit" id="btnSavePass" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center justify-center">
                                 <span id="btnSavePassText">Update Password</span>
-                                <i data-lucide="loader-2" id="btnSavePassLoader" class="w-4 h-4 ml-2 animate-spin hidden"></i>
+                                <i data-lucide="loader-2" id="btnSavePassLoader" class="w-5 h-5 ml-2 animate-spin hidden"></i>
                             </button>
                         </div>
                     </form>
@@ -777,35 +796,35 @@
             <!-- VIEW: PENGATURAN GLOBAL SISTEM (HANYA ADMIN)-->
             <!-- ========================================== -->
             <div id="view-global-set" class="view-section hidden max-w-3xl mx-auto space-y-6 pb-10">
-                <div class="bg-slate-900 p-6 rounded-xl shadow-md text-white">
-                    <h2 class="text-xl font-bold mb-1">Pengaturan Sistem (Global)</h2>
-                    <p class="text-sm text-slate-400">Atur arsitektur platform SaaS vs Single Store dan visibilitas halaman utama. Hanya untuk Super Admin.</p>
+                <div class="bg-slate-900 p-5 sm:p-6 rounded-xl shadow-md text-white">
+                    <h2 class="text-lg sm:text-xl font-bold mb-1">Pengaturan Sistem (Global)</h2>
+                    <p class="text-xs sm:text-sm text-slate-400">Atur arsitektur platform SaaS vs Single Store dan visibilitas halaman utama. Hanya untuk Super Admin.</p>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm">
                     <form id="globalSettingForm" class="space-y-6">
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Mode Platform / Arsitektur</label>
-                            <select id="setAppMode" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-slate-50 font-medium">
+                            <select id="setAppMode" class="w-full px-3 sm:px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-slate-50 font-medium">
                                 <option value="saas">SaaS Mode (Multi-Tenant, Ada Agency & Manajemen User)</option>
                                 <option value="single">Single Store Mode (Toko Mandiri, Fokus 1 Brand)</option>
                             </select>
-                            <p class="text-xs text-slate-500 mt-2">Jika diubah ke "Single Store", menu "Manajemen Pengguna" akan disembunyikan secara permanen dari sistem.</p>
+                            <p class="text-[10px] sm:text-xs text-slate-500 mt-2">Jika diubah ke "Single Store", menu "Manajemen Pengguna" akan disembunyikan secara permanen dari sistem.</p>
                         </div>
 
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Visibilitas Landing Page (index.html)</label>
-                            <select id="setShowLanding" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-slate-50 font-medium">
+                            <select id="setShowLanding" class="w-full px-3 sm:px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-slate-50 font-medium">
                                 <option value="on">Aktif (Tampilkan Landing Page Utama)</option>
                                 <option value="off">Mati (Redirect otomatis pengunjung ke halaman Login/Toko)</option>
                             </select>
-                            <p class="text-xs text-slate-500 mt-2">Matikan opsi ini jika Anda ingin platform terlihat eksklusif sebagai portal login tanpa halaman pameran (Showcase).</p>
+                            <p class="text-[10px] sm:text-xs text-slate-500 mt-2">Matikan opsi ini jika Anda ingin platform terlihat eksklusif sebagai portal login tanpa halaman pameran (Showcase).</p>
                         </div>
 
                         <div class="pt-2 border-t border-slate-100">
-                            <button type="submit" id="btnSaveGlobal" class="bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center justify-center w-full">
+                            <button type="submit" id="btnSaveGlobal" class="bg-slate-800 hover:bg-slate-900 text-white px-6 py-3.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center justify-center w-full">
                                 <span id="btnSaveGlobalText">Simpan Pengaturan Global</span>
-                                <i data-lucide="loader-2" id="btnSaveGlobalLoader" class="w-4 h-4 ml-2 animate-spin hidden"></i>
+                                <i data-lucide="loader-2" id="btnSaveGlobalLoader" class="w-5 h-5 ml-2 animate-spin hidden"></i>
                             </button>
                         </div>
                     </form>
@@ -823,45 +842,45 @@
     <div id="productModal" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal('productModal')"></div>
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
-            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden z-10">
-                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                    <h3 class="font-bold text-slate-800" id="productModalTitle">Tambah Produk Baru</h3>
-                    <button onclick="closeModal('productModal')" class="text-slate-400 hover:text-slate-600">
+            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden z-10 flex flex-col max-h-[90vh]">
+                <div class="px-5 sm:px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
+                    <h3 class="font-bold text-slate-800 text-sm sm:text-base" id="productModalTitle">Tambah Produk Baru</h3>
+                    <button onclick="closeModal('productModal')" class="text-slate-400 hover:text-slate-600 focus:outline-none">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
                 
-                <form id="productForm" class="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+                <form id="productForm" class="p-5 sm:p-6 space-y-4 flex-1 overflow-y-auto">
                     <input type="hidden" id="prodId" value="">
                     
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Nama Produk</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Nama Produk</label>
                         <input type="text" id="prodName" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Kategori Produk</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Kategori Produk</label>
                         <select id="prodCategory" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white">
                             <option value="">-- Tanpa Kategori --</option>
                             <!-- Diisi JS -->
                         </select>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Harga Utama (Rp)</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Harga Utama (Rp)</label>
                             <input type="number" id="prodPrice" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Stok Utama</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Stok Utama</label>
                             <input type="number" id="prodStock" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Kosong = Unlimited">
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
                         <!-- FITUR SATUAN DITAMBAHKAN DI SINI -->
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Satuan Produk</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Satuan Produk</label>
                             <select id="prodSatuan" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white">
                                 <option value="pcs">Pcs</option>
                                 <option value="pack">Pack</option>
@@ -873,7 +892,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Badge (Opsional)</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Badge (Opsional)</label>
                             <select id="prodBadge" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white text-emerald-600 font-medium">
                                 <option value="">-- Kosong --</option>
                                 <option value="Promo">Promo</option>
@@ -886,33 +905,35 @@
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">URL Gambar Utama</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">URL Gambar Utama</label>
                         <input type="url" id="prodImg" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="https://...">
                     </div>
                     
                     <!-- FITUR DESKRIPSI DITAMBAHKAN DI SINI -->
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Deskripsi Singkat (Opsional)</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Deskripsi Singkat (Opsional)</label>
                         <textarea id="prodDesc" rows="2" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Jelaskan detail produk untuk pembeli..."></textarea>
                     </div>
 
                     <!-- FITUR VARIAN PRODUK DITAMBAHKAN DI SINI -->
                     <div class="mt-4 border-t border-slate-100 pt-4">
                         <div class="flex justify-between items-center mb-2">
-                            <label class="block text-sm font-bold text-slate-700">Varian Produk (Opsional)</label>
-                            <button type="button" onclick="addVariantInput()" class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-1 rounded hover:bg-emerald-100 transition-colors flex items-center gap-1"><i data-lucide="plus" class="w-3 h-3"></i> Tambah Varian</button>
+                            <label class="block text-xs sm:text-sm font-bold text-slate-700">Varian Produk (Opsional)</label>
+                            <button type="button" onclick="addVariantInput()" class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2.5 py-1.5 rounded hover:bg-emerald-100 transition-colors flex items-center gap-1"><i data-lucide="plus" class="w-3 h-3"></i> Tambah</button>
                         </div>
-                        <p class="text-[10px] text-slate-500 mb-3">Tambahkan jika produk memiliki warna, ukuran, atau harga yang berbeda.</p>
-                        <div id="variantsContainer" class="space-y-3 max-h-[40vh] overflow-y-auto pr-1">
+                        <p class="text-[10px] sm:text-xs text-slate-500 mb-3">Tambahkan jika produk memiliki warna, ukuran, atau harga berbeda.</p>
+                        <div id="variantsContainer" class="space-y-3">
                             <!-- Input dinamis -->
                         </div>
                     </div>
-                    
-                    <button type="submit" id="btnSaveProd" class="w-full py-3 bg-emerald-500 text-white font-bold rounded-lg mt-2 flex justify-center items-center transition-colors hover:bg-emerald-600">
+                </form>
+
+                <div class="p-4 bg-white border-t border-slate-100 shrink-0">
+                    <button type="submit" form="productForm" id="btnSaveProd" class="w-full py-3 bg-emerald-500 text-white font-bold rounded-lg flex justify-center items-center transition-colors hover:bg-emerald-600">
                         <span id="btnSaveProdText">Simpan Produk</span>
                         <i data-lucide="loader-2" id="btnSaveProdLoader" class="w-4 h-4 ml-2 animate-spin hidden"></i>
                     </button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -921,33 +942,35 @@
     <div id="categoryModal" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal('categoryModal')"></div>
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
-            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden z-10">
-                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                    <h3 class="font-bold text-slate-800" id="categoryModalTitle">Tambah Kategori</h3>
-                    <button onclick="closeModal('categoryModal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden z-10 flex flex-col max-h-[90vh]">
+                <div class="px-5 sm:px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
+                    <h3 class="font-bold text-slate-800 text-sm sm:text-base" id="categoryModalTitle">Tambah Kategori</h3>
+                    <button onclick="closeModal('categoryModal')" class="text-slate-400 hover:text-slate-600 focus:outline-none"><i data-lucide="x" class="w-5 h-5"></i></button>
                 </div>
-                <form id="categoryForm" class="p-6 space-y-4">
+                <form id="categoryForm" class="p-5 sm:p-6 space-y-4 flex-1 overflow-y-auto">
                     <input type="hidden" id="catId" value="">
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Nama Kategori</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Nama Kategori</label>
                         <input type="text" id="catName" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm">
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Urutan</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Urutan</label>
                             <input type="number" id="catSort" value="0" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Status</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Status</label>
                             <select id="catStatus" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white">
                                 <option value="true">Aktif</option><option value="false">Mati (Hidden)</option>
                             </select>
                         </div>
                     </div>
-                    <button type="submit" id="btnSaveCat" class="w-full py-3 bg-emerald-500 text-white font-bold rounded-lg mt-2 flex justify-center items-center">
+                </form>
+                <div class="p-4 bg-white border-t border-slate-100 shrink-0">
+                    <button type="submit" form="categoryForm" id="btnSaveCat" class="w-full py-3 bg-emerald-500 text-white font-bold rounded-lg flex justify-center items-center">
                         <span id="btnSaveCatText">Simpan Kategori</span><i data-lucide="loader-2" id="btnSaveCatLoader" class="w-4 h-4 ml-2 animate-spin hidden"></i>
                     </button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -956,43 +979,45 @@
     <div id="couponModal" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal('couponModal')"></div>
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
-            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden z-10">
-                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                    <h3 class="font-bold text-slate-800" id="couponModalTitle">Buat Kupon Diskon</h3>
-                    <button onclick="closeModal('couponModal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden z-10 flex flex-col max-h-[90vh]">
+                <div class="px-5 sm:px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
+                    <h3 class="font-bold text-slate-800 text-sm sm:text-base" id="couponModalTitle">Buat Kupon Diskon</h3>
+                    <button onclick="closeModal('couponModal')" class="text-slate-400 hover:text-slate-600 focus:outline-none"><i data-lucide="x" class="w-5 h-5"></i></button>
                 </div>
-                <form id="couponForm" class="p-6 space-y-4">
+                <form id="couponForm" class="p-5 sm:p-6 space-y-4 flex-1 overflow-y-auto">
                     <input type="hidden" id="cupId" value="">
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Kode Kupon</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Kode Kupon</label>
                         <input type="text" id="cupCode" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm uppercase font-mono" placeholder="PROMO2026">
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Tipe Diskon</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Tipe Diskon</label>
                             <select id="cupType" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white">
                                 <option value="percent">Persen (%)</option><option value="fixed">Nominal (Rp)</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nilai Diskon</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Nilai Diskon</label>
                             <input type="number" id="cupValue" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="10">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Minimal Belanja (Rp)</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Minimal Belanja (Rp)</label>
                         <input type="number" id="cupMin" value="0" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Status Kupon</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Status Kupon</label>
                         <select id="cupStatus" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white">
                             <option value="true">Aktif</option><option value="false">Tidak Aktif</option>
                         </select>
                     </div>
-                    <button type="submit" id="btnSaveCup" class="w-full py-3 bg-emerald-500 text-white font-bold rounded-lg mt-2 flex justify-center items-center">
+                </form>
+                <div class="p-4 bg-white border-t border-slate-100 shrink-0">
+                    <button type="submit" form="couponForm" id="btnSaveCup" class="w-full py-3 bg-emerald-500 text-white font-bold rounded-lg flex justify-center items-center">
                         <span id="btnSaveCupText">Simpan Kupon</span><i data-lucide="loader-2" id="btnSaveCupLoader" class="w-4 h-4 ml-2 animate-spin hidden"></i>
                     </button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -1001,25 +1026,27 @@
     <div id="shippingModal" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal('shippingModal')"></div>
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
-            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden z-10">
-                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                    <h3 class="font-bold text-slate-800" id="shippingModalTitle">Atur Tarif Pengiriman</h3>
-                    <button onclick="closeModal('shippingModal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden z-10 flex flex-col max-h-[90vh]">
+                <div class="px-5 sm:px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
+                    <h3 class="font-bold text-slate-800 text-sm sm:text-base" id="shippingModalTitle">Atur Tarif Pengiriman</h3>
+                    <button onclick="closeModal('shippingModal')" class="text-slate-400 hover:text-slate-600 focus:outline-none"><i data-lucide="x" class="w-5 h-5"></i></button>
                 </div>
-                <form id="shippingForm" class="p-6 space-y-4">
+                <form id="shippingForm" class="p-5 sm:p-6 space-y-4 flex-1 overflow-y-auto">
                     <input type="hidden" id="shpId" value="">
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Area / Jasa Kirim</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Area / Jasa Kirim</label>
                         <input type="text" id="shpArea" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Contoh: Dalam Kota / J&T Express">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Tarif Ongkos Kirim (Rp)</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Tarif Ongkos Kirim (Rp)</label>
                         <input type="number" id="shpRate" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="10000">
                     </div>
-                    <button type="submit" id="btnSaveShp" class="w-full py-3 bg-emerald-500 text-white font-bold rounded-lg mt-2 flex justify-center items-center">
+                </form>
+                <div class="p-4 bg-white border-t border-slate-100 shrink-0">
+                    <button type="submit" form="shippingForm" id="btnSaveShp" class="w-full py-3 bg-emerald-500 text-white font-bold rounded-lg flex justify-center items-center">
                         <span id="btnSaveShpText">Simpan Tarif</span><i data-lucide="loader-2" id="btnSaveShpLoader" class="w-4 h-4 ml-2 animate-spin hidden"></i>
                     </button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -1028,83 +1055,86 @@
     <div id="checkoutModal" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal('checkoutModal')"></div>
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
-            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden z-10 p-6 space-y-4">
+            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden z-10 flex flex-col max-h-[90vh]">
                 
-                <div class="flex justify-between items-center border-b pb-3">
-                    <h3 class="font-bold text-xl text-slate-800">Selesaikan Pembayaran</h3>
-                    <button onclick="closeModal('checkoutModal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <div class="px-5 sm:px-6 py-4 flex justify-between items-center border-b border-slate-100 shrink-0 bg-slate-50">
+                    <h3 class="font-bold text-lg sm:text-xl text-slate-800">Selesaikan Pembayaran</h3>
+                    <button onclick="closeModal('checkoutModal')" class="text-slate-400 hover:text-slate-600 focus:outline-none"><i data-lucide="x" class="w-5 h-5"></i></button>
                 </div>
                 
-                <!-- Rincian Biaya (Orchestrator Style) -->
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center text-sm font-bold text-slate-600">
-                        <span>Subtotal Belanja:</span><span id="coSubtotal">Rp 0</span>
-                    </div>
-
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Pengiriman / Ongkir</label>
-                        <select id="coOngkir" class="w-full px-2 py-1.5 border border-slate-200 rounded text-sm bg-white focus:outline-none" onchange="recalculatePOS()">
-                            <option value="">-- Tanpa Ongkir / Ambil Sendiri --</option>
-                            <!-- Diisi via JS -->
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Kode Kupon</label>
-                        <div class="flex gap-2">
-                            <input type="text" id="coKuponCode" class="flex-1 px-2 py-1.5 border border-slate-200 rounded text-sm uppercase" placeholder="KODE...">
-                            <button type="button" onclick="applyPOSCoupon()" id="btnApplyCup" class="bg-slate-800 text-white px-3 rounded text-xs font-bold shrink-0">Terapkan</button>
+                <div class="p-5 sm:p-6 space-y-4 flex-1 overflow-y-auto">
+                    <!-- Rincian Biaya (Orchestrator Style) -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-3">
+                        <div class="flex justify-between items-center text-sm font-bold text-slate-600">
+                            <span>Subtotal Belanja:</span><span id="coSubtotal">Rp 0</span>
                         </div>
-                        <p id="coKuponMsg" class="text-[10px] mt-1 font-bold hidden"></p>
-                    </div>
 
-                    <div class="border-t border-slate-200 pt-3 space-y-1">
-                        <div class="flex justify-between text-xs text-slate-500"><span>Ongkos Kirim:</span><span id="coOngkirVal">Rp 0</span></div>
-                        <div class="flex justify-between text-xs text-emerald-600"><span>Diskon:</span><span id="coDiskonVal">-Rp 0</span></div>
-                        <div class="flex justify-between items-end mt-2 pt-2 border-t border-slate-200">
-                            <span class="text-sm font-bold text-slate-800">Grand Total:</span>
-                            <span class="text-2xl font-black text-slate-900" id="coGrandTotal">Rp 0</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-1">Nama Pembeli (Opsional)</label>
-                            <input type="text" id="coNama" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Bapak/Ibu Budi">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Pengiriman / Ongkir</label>
+                            <select id="coOngkir" class="w-full px-2 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none" onchange="recalculatePOS()">
+                                <option value="">-- Tanpa Ongkir / Ambil Sendiri --</option>
+                                <!-- Diisi via JS -->
+                            </select>
                         </div>
+
                         <div>
-                            <label class="block text-sm font-bold text-emerald-600 mb-1">No WA Pembeli (Opsional, untuk Struk Digital)</label>
-                            <input type="tel" id="coWa" class="w-full px-3 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="6281234...">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Kode Kupon</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="coKuponCode" class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm uppercase" placeholder="KODE...">
+                                <button type="button" onclick="applyPOSCoupon()" id="btnApplyCup" class="bg-slate-800 text-white px-3 py-2 rounded-lg text-xs font-bold shrink-0">Terapkan</button>
+                            </div>
+                            <p id="coKuponMsg" class="text-[10px] mt-1 font-bold hidden"></p>
                         </div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-1">Metode Pembayaran</label>
-                        <select id="coMethod" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm font-bold bg-white" onchange="toggleKembalian()">
-                            <option value="Cash">Tunai (Bayar di Kasir)</option>
-                            <option value="QRIS">QRIS</option>
-                            <option value="Transfer">Transfer Bank</option>
-                        </select>
+
+                        <div class="border-t border-slate-200 pt-3 space-y-1">
+                            <div class="flex justify-between text-xs text-slate-500"><span>Ongkos Kirim:</span><span id="coOngkirVal">Rp 0</span></div>
+                            <div class="flex justify-between text-xs text-emerald-600"><span>Diskon:</span><span id="coDiskonVal">-Rp 0</span></div>
+                            <div class="flex justify-between items-end mt-2 pt-2 border-t border-slate-200">
+                                <span class="text-sm font-bold text-slate-800">Grand Total:</span>
+                                <span class="text-xl sm:text-2xl font-black text-slate-900" id="coGrandTotal">Rp 0</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Area Kalkulator Kasir -->
-                    <div id="cashArea" class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                        <label class="block text-sm font-bold text-blue-800 mb-1">Uang Diterima (Rp)</label>
-                        <input type="number" id="coUangDiterima" class="w-full px-3 py-2.5 border border-blue-200 rounded-lg text-lg font-bold focus:outline-none focus:border-emerald-500" oninput="hitungKembalian()">
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1">Nama Pembeli (Opsional)</label>
+                                <input type="text" id="coNama" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Bapak/Ibu Budi">
+                            </div>
+                            <div>
+                                <label class="block text-xs sm:text-sm font-bold text-emerald-600 mb-1">No WA (Utk Struk Digital)</label>
+                                <input type="tel" id="coWa" class="w-full px-3 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="6281234...">
+                            </div>
+                        </div>
                         
-                        <div class="flex justify-between items-center mt-3 pt-3 border-t border-blue-200">
-                            <span class="text-sm font-bold text-blue-600">Kembalian:</span>
-                            <span class="text-xl font-black text-blue-700" id="coKembalian">Rp 0</span>
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1">Metode Pembayaran</label>
+                            <select id="coMethod" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm font-bold bg-white" onchange="toggleKembalian()">
+                                <option value="Cash">Tunai (Bayar di Kasir)</option>
+                                <option value="QRIS">QRIS</option>
+                                <option value="Transfer">Transfer Bank</option>
+                            </select>
+                        </div>
+
+                        <!-- Area Kalkulator Kasir -->
+                        <div id="cashArea" class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <label class="block text-xs sm:text-sm font-bold text-blue-800 mb-1">Uang Diterima (Rp)</label>
+                            <input type="number" id="coUangDiterima" class="w-full px-3 py-2.5 border border-blue-200 rounded-lg text-lg font-bold focus:outline-none focus:border-emerald-500" oninput="hitungKembalian()">
+                            
+                            <div class="flex justify-between items-center mt-3 pt-3 border-t border-blue-200">
+                                <span class="text-sm font-bold text-blue-600">Kembalian:</span>
+                                <span class="text-lg sm:text-xl font-black text-blue-700" id="coKembalian">Rp 0</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <button onclick="submitCheckout()" id="btnSubmitCheckout" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl mt-2 flex justify-center items-center shadow-lg transition-all">
-                    <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i> Konfirmasi & Cetak Struk
-                </button>
-                
+                <div class="p-4 bg-white border-t border-slate-100 shrink-0">
+                    <button onclick="submitCheckout()" id="btnSubmitCheckout" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl flex justify-center items-center shadow-lg transition-all">
+                        <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i> Konfirmasi & Cetak
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1113,65 +1143,66 @@
     <div id="userModal" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal('userModal')"></div>
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
-            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden z-10">
+            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden z-10 flex flex-col max-h-[90vh]">
                 
-                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                    <h3 class="font-bold text-slate-800" id="userModalTitle">Buat Toko Baru</h3>
-                    <button onclick="closeModal('userModal')" class="text-slate-400 hover:text-slate-600">
+                <div class="px-5 sm:px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
+                    <h3 class="font-bold text-slate-800 text-sm sm:text-base" id="userModalTitle">Buat Toko Baru</h3>
+                    <button onclick="closeModal('userModal')" class="text-slate-400 hover:text-slate-600 focus:outline-none">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
                 
-                <form id="userForm" class="p-6 space-y-4">
+                <form id="userForm" class="p-5 sm:p-6 space-y-4 flex-1 overflow-y-auto">
                     <input type="hidden" id="usrId" value="">
                     
                     <div id="pwdContainer">
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Password Awal (Khusus buat baru)</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Password Awal (Khusus buat baru)</label>
                         <input type="password" id="usrPwd" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm mb-3">
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Username</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Username</label>
                             <input type="text" id="usrUsername" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Email</label>
                             <input type="email" id="usrEmail" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm">
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nama Toko</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Nama Toko</label>
                             <input type="text" id="usrNamaToko" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm">
                         </div>
                         <div id="slugContainer" class="hidden">
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Slug URL</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Slug URL</label>
                             <input type="text" id="usrSlugToko" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm">
                         </div>
                     </div>
 
-                    <div id="editExtraContainer" class="hidden grid-cols-2 gap-4 bg-slate-50 p-3 rounded-lg border">
+                    <div id="editExtraContainer" class="hidden grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-100">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Status</label>
-                            <select id="usrStatus" class="w-full px-2 py-1.5 border rounded focus:outline-none text-sm">
+                            <select id="usrStatus" class="w-full px-3 py-2 border rounded-lg focus:outline-none text-sm bg-white">
                                 <option value="approved">Approved</option>
                                 <option value="pending">Pending</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Expired At (yyyy-mm-dd)</label>
-                            <input type="text" id="usrExpired" placeholder="2026-12-31" class="w-full px-2 py-1.5 border rounded focus:outline-none text-sm">
+                            <input type="text" id="usrExpired" placeholder="2026-12-31" class="w-full px-3 py-2 border rounded-lg focus:outline-none text-sm">
                         </div>
                     </div>
-
-                    <button type="submit" id="btnSaveUser" class="w-full py-3 bg-emerald-500 text-white font-bold rounded-lg mt-4 flex justify-center items-center transition-colors hover:bg-emerald-600">
-                        <span id="btnSaveUserText">Simpan User</span>
-                        <i data-lucide="loader-2" id="btnSaveUserLoader" class="w-4 h-4 ml-2 animate-spin hidden"></i>
-                    </button>
-                    
                 </form>
+
+                <div class="p-4 bg-white border-t border-slate-100 shrink-0">
+                    <button type="submit" form="userForm" id="btnSaveUser" class="w-full py-3.5 bg-emerald-500 text-white font-bold rounded-xl flex justify-center items-center transition-colors hover:bg-emerald-600">
+                        <span id="btnSaveUserText">Simpan User</span>
+                        <i data-lucide="loader-2" id="btnSaveUserLoader" class="w-5 h-5 ml-2 animate-spin hidden"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1180,41 +1211,43 @@
     <div id="planModal" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal('planModal')"></div>
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
-            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden z-10">
-                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                    <h3 class="font-bold text-slate-800" id="planModalTitle">Tambah Paket Harga</h3>
-                    <button onclick="closeModal('planModal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden z-10 flex flex-col max-h-[90vh]">
+                <div class="px-5 sm:px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
+                    <h3 class="font-bold text-slate-800 text-sm sm:text-base" id="planModalTitle">Tambah Paket Harga</h3>
+                    <button onclick="closeModal('planModal')" class="text-slate-400 hover:text-slate-600 focus:outline-none"><i data-lucide="x" class="w-5 h-5"></i></button>
                 </div>
-                <form id="planForm" class="p-6 space-y-4">
+                <form id="planForm" class="p-5 sm:p-6 space-y-4 flex-1 overflow-y-auto">
                     <input type="hidden" id="planId" value="">
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Nama Paket</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Nama Paket</label>
                         <input type="text" id="planName" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="Contoh: Sultan / Lifetime">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Harga (Rp)</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Harga (Rp)</label>
                         <input type="number" id="planPrice" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="49000">
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Role Hasil Upgrade</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Role Hasil Upgrade</label>
                             <select id="planRole" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white">
                                 <option value="user">User Biasa</option>
                                 <option value="agency">Agency (Bisa buat toko)</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Status</label>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1">Status</label>
                             <select id="planStatus" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white">
                                 <option value="true">Aktif</option>
                                 <option value="false">Tidak Aktif</option>
                             </select>
                         </div>
                     </div>
-                    <button type="submit" id="btnSavePlan" class="w-full py-3 bg-emerald-500 text-white font-bold rounded-lg mt-2 flex justify-center items-center transition-colors hover:bg-emerald-600">
-                        <span id="btnSavePlanText">Simpan Paket</span><i data-lucide="loader-2" id="btnSavePlanLoader" class="w-4 h-4 ml-2 animate-spin hidden"></i>
-                    </button>
                 </form>
+                <div class="p-4 bg-white border-t border-slate-100 shrink-0">
+                    <button type="submit" form="planForm" id="btnSavePlan" class="w-full py-3.5 bg-emerald-500 text-white font-bold rounded-xl flex justify-center items-center transition-colors hover:bg-emerald-600">
+                        <span id="btnSavePlanText">Simpan Paket</span><i data-lucide="loader-2" id="btnSavePlanLoader" class="w-5 h-5 ml-2 animate-spin hidden"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1225,12 +1258,12 @@
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
             <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden z-10 flex flex-col max-h-[90vh]">
                 
-                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-amber-400 to-orange-500 text-white">
+                <div class="px-5 sm:px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-amber-400 to-orange-500 text-white shrink-0">
                     <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="zap" class="w-5 h-5"></i> Upgrade Akun</h3>
-                    <button onclick="closeModal('upgradeModal')" class="text-amber-50 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+                    <button onclick="closeModal('upgradeModal')" class="text-amber-50 hover:text-white focus:outline-none"><i data-lucide="x" class="w-5 h-5"></i></button>
                 </div>
                 
-                <div class="p-6 overflow-y-auto flex-1 space-y-6 bg-slate-50">
+                <div class="p-5 sm:p-6 overflow-y-auto flex-1 space-y-6 bg-slate-50">
                     <div id="upgradeLoading" class="text-center text-slate-500 py-8">
                         <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-orange-500"></i> Memuat daftar paket...
                     </div>
@@ -1247,12 +1280,12 @@
                             <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Informasi Pembayaran</h4>
                             
                             <div id="upgradeBankArea" class="hidden mb-3 pb-3 border-b border-slate-100">
-                                <p class="text-xs text-slate-500 mb-1">Transfer Bank:</p>
+                                <p class="text-[10px] sm:text-xs text-slate-500 mb-1">Transfer Bank:</p>
                                 <p class="text-sm font-bold text-slate-800" id="upgradeBankInfo">-</p>
                             </div>
                             
                             <div id="upgradeQrisArea" class="hidden text-center">
-                                <p class="text-xs text-slate-500 mb-2">Scan QRIS:</p>
+                                <p class="text-[10px] sm:text-xs text-slate-500 mb-2">Scan QRIS:</p>
                                 <img id="upgradeQrisImg" src="" class="w-32 h-32 mx-auto rounded-lg border border-slate-100 object-contain bg-white p-1">
                             </div>
                         </div>
@@ -1304,6 +1337,21 @@
         // Init Icons
         lucide.createIcons();
         
+        // Logika Toggle Sidebar Mobile
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+
+        if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleSidebar);
+        if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
+        if(sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
+
         const formatRupiah = (angka) => {
             return new Intl.NumberFormat('id-ID', { 
                 style: 'currency', 
@@ -1575,6 +1623,11 @@
                 activeMenu.classList.add('bg-emerald-50', 'text-emerald-600');
                 document.getElementById('pageTitle').innerText = activeMenu.innerText.trim();
             }
+
+            // Tutup sidebar di versi mobile setelah klik menu
+            if (window.innerWidth < 1024 && !sidebar.classList.contains('-translate-x-full')) {
+                toggleSidebar();
+            }
         }
 
         function showGlobalAlert(msg, isSuccess = true) {
@@ -1832,11 +1885,11 @@
             
             tbody.innerHTML = globalPlans.map(p => `
                 <tr class="hover:bg-slate-50 border-b border-slate-100">
-                    <td class="px-6 py-4 font-bold text-slate-800">${p.name}</td>
-                    <td class="px-6 py-4 text-emerald-600 font-bold">${formatRupiah(p.price)}</td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 bg-blue-50 text-blue-600 rounded text-[10px] font-bold uppercase tracking-wider">${p.role_result}</span></td>
-                    <td class="px-6 py-4">${String(p.is_active)==='true' ? '<span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded text-[10px] font-bold">AKTIF</span>' : '<span class="text-slate-500 bg-slate-100 px-2 py-1 rounded text-[10px] font-bold">MATI</span>'}</td>
-                    <td class="px-6 py-4 text-right">
+                    <td class="px-4 sm:px-6 py-4 font-bold text-slate-800">${p.name}</td>
+                    <td class="px-4 sm:px-6 py-4 text-emerald-600 font-bold">${formatRupiah(p.price)}</td>
+                    <td class="px-4 sm:px-6 py-4"><span class="px-2 py-1 bg-blue-50 text-blue-600 rounded text-[10px] font-bold uppercase tracking-wider">${p.role_result}</span></td>
+                    <td class="px-4 sm:px-6 py-4">${String(p.is_active)==='true' ? '<span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded text-[10px] font-bold">AKTIF</span>' : '<span class="text-slate-500 bg-slate-100 px-2 py-1 rounded text-[10px] font-bold">MATI</span>'}</td>
+                    <td class="px-4 sm:px-6 py-4 text-right">
                         <button onclick="openPlanModal('${p.id}')" class="text-blue-500 hover:text-blue-700 text-sm font-medium mr-3">Edit</button>
                         <button onclick="deletePlan('${p.id}')" class="text-red-500 hover:text-red-700 text-sm font-medium">Hapus</button>
                     </td>
@@ -1931,11 +1984,11 @@
                     container.innerHTML = res.packages.map((p, idx) => `
                         <label class="flex items-center justify-between p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-orange-50 transition-colors has-[:checked]:border-orange-500 has-[:checked]:bg-orange-50 has-[:checked]:ring-1 has-[:checked]:ring-orange-500">
                             <div>
-                                <div class="font-bold text-slate-800 text-base">${p.name}</div>
-                                <div class="text-xs text-slate-500 mt-0.5">Upgrade ke ${p.role_result.toUpperCase()}</div>
+                                <div class="font-bold text-slate-800 text-sm sm:text-base">${p.name}</div>
+                                <div class="text-[10px] sm:text-xs text-slate-500 mt-0.5">Upgrade ke ${p.role_result.toUpperCase()}</div>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span class="font-black text-orange-600 text-lg">${formatRupiah(p.price)}</span>
+                                <span class="font-black text-orange-600 text-base sm:text-lg">${formatRupiah(p.price)}</span>
                                 <input type="radio" name="upgradePlan" value='${JSON.stringify(p)}' class="w-5 h-5 text-orange-500 focus:ring-orange-500" ${idx === 0 ? 'checked' : ''}>
                             </div>
                         </label>
@@ -2001,9 +2054,9 @@
             if(!container) return;
             
             const div = document.createElement('div');
-            div.className = 'flex gap-2 items-center sm-item';
+            div.className = 'flex flex-col sm:flex-row gap-2 items-start sm:items-center sm-item bg-slate-50 p-3 sm:bg-transparent sm:p-0 rounded-lg border border-slate-100 sm:border-0';
             div.innerHTML = `
-                <select class="sm-platform w-1/3 px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white">
+                <select class="sm-platform w-full sm:w-1/3 px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm bg-white">
                     <option value="Instagram" ${platform==='Instagram'?'selected':''}>Instagram</option>
                     <option value="Facebook" ${platform==='Facebook'?'selected':''}>Facebook</option>
                     <option value="TikTok" ${platform==='TikTok'?'selected':''}>TikTok</option>
@@ -2012,8 +2065,10 @@
                     <option value="Tokopedia" ${platform==='Tokopedia'?'selected':''}>Tokopedia</option>
                     <option value="Website" ${platform==='Website'?'selected':''}>Website</option>
                 </select>
-                <input type="url" class="sm-url w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="https://..." value="${url}">
-                <button type="button" onclick="this.parentElement.remove()" class="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-100 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                <div class="flex gap-2 w-full">
+                    <input type="url" class="sm-url w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="https://..." value="${url}">
+                    <button type="button" onclick="this.closest('.sm-item').remove()" class="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-100 transition-colors shrink-0"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </div>
             `;
             container.appendChild(div);
             lucide.createIcons();
@@ -2028,35 +2083,35 @@
             const container = document.getElementById('variantsContainer');
             if(!container) return;
             const div = document.createElement('div');
-            div.className = 'variant-item bg-slate-50 p-3 rounded-lg border border-slate-200 relative mt-2';
+            div.className = 'variant-item bg-slate-50 p-3 rounded-xl border border-slate-200 relative mt-2';
             const varId = v && v.id ? v.id : 'VAR-' + generateId();
             
             div.innerHTML = `
                 <input type="hidden" class="var-id" value="${varId}">
-                <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-red-400 hover:text-red-600 transition-colors"><i data-lucide="x-circle" class="w-5 h-5"></i></button>
-                <div class="grid grid-cols-2 gap-3 mb-3 pr-8">
+                <button type="button" onclick="this.parentElement.remove()" class="absolute top-3 right-3 text-red-400 hover:text-red-600 transition-colors"><i data-lucide="x-circle" class="w-5 h-5"></i></button>
+                <div class="grid grid-cols-2 gap-3 mb-3 pr-6">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-600 mb-1">Warna/Tipe</label>
-                        <input type="text" class="var-warna w-full px-3 py-2 border border-slate-200 rounded-md text-xs focus:outline-none focus:border-emerald-500" placeholder="Merah, Pedas..." value="${v && v.warna ? v.warna : ''}">
+                        <input type="text" class="var-warna w-full px-2 py-1.5 border border-slate-200 rounded-md text-xs focus:outline-none focus:border-emerald-500" placeholder="Merah, Pedas..." value="${v && v.warna ? v.warna : ''}">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-600 mb-1">Ukuran/Size</label>
-                        <input type="text" class="var-size w-full px-3 py-2 border border-slate-200 rounded-md text-xs focus:outline-none focus:border-emerald-500" placeholder="XL, 40..." value="${v && v.size ? v.size : ''}">
+                        <input type="text" class="var-size w-full px-2 py-1.5 border border-slate-200 rounded-md text-xs focus:outline-none focus:border-emerald-500" placeholder="XL, 40..." value="${v && v.size ? v.size : ''}">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3 mb-3">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-600 mb-1">Harga Spesifik (Rp)</label>
-                        <input type="number" class="var-harga w-full px-3 py-2 border border-slate-200 rounded-md text-xs focus:outline-none focus:border-emerald-500" placeholder="Kosong = Ikut Harga Utama" value="${v && v.harga ? v.harga : ''}">
+                        <input type="number" class="var-harga w-full px-2 py-1.5 border border-slate-200 rounded-md text-xs focus:outline-none focus:border-emerald-500" placeholder="Kosong = Harga Utama" value="${v && v.harga ? v.harga : ''}">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-600 mb-1">Stok Varian</label>
-                        <input type="number" class="var-stok w-full px-3 py-2 border border-slate-200 rounded-md text-xs focus:outline-none focus:border-emerald-500" placeholder="Kosong = Unlimited" value="${v && v.stok !== undefined ? v.stok : ''}">
+                        <input type="number" class="var-stok w-full px-2 py-1.5 border border-slate-200 rounded-md text-xs focus:outline-none focus:border-emerald-500" placeholder="Kosong = Unlimited" value="${v && v.stok !== undefined ? v.stok : ''}">
                     </div>
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-slate-600 mb-1">URL Gambar Khusus (Opsional)</label>
-                    <input type="url" class="var-gambar w-full px-3 py-2 border border-slate-200 rounded-md text-xs focus:outline-none focus:border-emerald-500" placeholder="https://..." value="${v && v.gambar ? v.gambar : ''}">
+                    <input type="url" class="var-gambar w-full px-2 py-1.5 border border-slate-200 rounded-md text-xs focus:outline-none focus:border-emerald-500" placeholder="https://..." value="${v && v.gambar ? v.gambar : ''}">
                 </div>
             `;
             container.appendChild(div);
@@ -2072,8 +2127,8 @@
             div.className = 'flex gap-2 items-center';
             div.innerHTML = `
                 <div class="w-8 h-8 shrink-0 rounded bg-slate-100 text-slate-500 flex items-center justify-center font-bold text-xs idx-counter"></div>
-                <input type="url" class="tutorial-link-input w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-sm" placeholder="https://youtube.com/watch?v=..." value="${value}">
-                <button type="button" onclick="this.parentElement.remove(); updateTutorialIdx();" class="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-100 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                <input type="url" class="tutorial-link-input w-full px-3 sm:px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-xs sm:text-sm" placeholder="https://youtube.com/watch?v=..." value="${value}">
+                <button type="button" onclick="this.parentElement.remove(); updateTutorialIdx();" class="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-100 transition-colors shrink-0"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             `;
             container.appendChild(div);
             lucide.createIcons();
@@ -2120,11 +2175,11 @@
             iframe.src = getEmbedUrl(links[0]);
 
             container.innerHTML = links.map((link, idx) => `
-                <button onclick="document.getElementById('tutorialIframe').src = getEmbedUrl('${link}')" class="w-full text-left p-4 hover:bg-slate-50 border-b border-slate-100 flex items-start gap-3 transition-colors focus:bg-emerald-50 focus:border-l-4 focus:border-l-emerald-500">
-                    <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 font-bold text-xs">${idx + 1}</div>
+                <button onclick="document.getElementById('tutorialIframe').src = getEmbedUrl('${link}')" class="w-full text-left p-3 sm:p-4 hover:bg-slate-50 border-b border-slate-100 flex items-start gap-3 transition-colors focus:bg-emerald-50 focus:border-l-4 focus:border-l-emerald-500">
+                    <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 font-bold text-[10px] sm:text-xs">${idx + 1}</div>
                     <div class="overflow-hidden">
-                        <div class="truncate text-sm font-bold text-slate-700 mb-0.5">Video Panduan Bagian ${idx + 1}</div>
-                        <div class="text-[10px] text-slate-400 truncate">Klik untuk memutar video materi ini</div>
+                        <div class="truncate text-xs sm:text-sm font-bold text-slate-700 mb-0.5">Video Panduan Bagian ${idx + 1}</div>
+                        <div class="text-[9px] sm:text-[10px] text-slate-400 truncate">Klik untuk memutar video materi ini</div>
                     </div>
                 </button>
             `).join('');
@@ -2145,36 +2200,36 @@
                     if(cat) catName = cat.name; 
                 }
 
-                let badgeHtml = p.badge ? `<span class="bg-red-100 text-red-600 px-1.5 py-0.5 rounded text-[10px] font-bold mt-1 inline-block">${p.badge}</span>` : '';
+                let badgeHtml = p.badge ? `<span class="bg-red-100 text-red-600 px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold mt-1 inline-block">${p.badge}</span>` : '';
                 
                 // Cek apakah punya varian
-                let varInfo = `<span class="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">${p.stock === '' ? 'Unlimited' : p.stock + ' ' + (p.unit || 'pcs')}</span>`;
+                let varInfo = `<span class="bg-slate-100 text-slate-600 px-2 py-1 rounded text-[10px] sm:text-xs font-bold">${p.stock === '' ? 'Unlimited' : p.stock + ' ' + (p.unit || 'pcs')}</span>`;
                 try {
                     let parsedVars = JSON.parse(p.variants || '[]');
                     if(parsedVars.length > 0) {
-                        varInfo = `<span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-bold border border-blue-100">${parsedVars.length} Varian</span>`;
+                        varInfo = `<span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-[10px] sm:text-xs font-bold border border-blue-100">${parsedVars.length} Varian</span>`;
                     }
                 } catch(e){}
 
                 return `
                 <tr class="hover:bg-slate-50 border-b border-slate-100">
-                    <td class="px-6 py-4 flex items-center gap-3">
-                        <img src="${p.img || 'https://placehold.co/100x100/e2e8f0/64748b?text=Box'}" class="w-10 h-10 rounded-lg object-cover">
-                        <div>
-                            <div class="font-bold text-slate-800 flex flex-col items-start">${p.name} ${badgeHtml}</div>
-                            <div class="text-[10px] text-slate-400 mt-1">Kategori: ${catName}</div>
+                    <td class="px-4 sm:px-6 py-4 flex items-center gap-3">
+                        <img src="${p.img || 'https://placehold.co/100x100/e2e8f0/64748b?text=Box'}" class="w-10 h-10 rounded-lg object-cover shrink-0">
+                        <div class="min-w-0">
+                            <div class="font-bold text-slate-800 flex flex-col items-start truncate text-xs sm:text-sm">${p.name} ${badgeHtml}</div>
+                            <div class="text-[9px] sm:text-[10px] text-slate-400 mt-1 truncate">Kategori: ${catName}</div>
                         </div>
                     </td>
-                    <td class="px-6 py-4">
-                        <span class="font-bold text-slate-700">${formatRupiah(p.price)}</span>
-                        <span class="text-xs text-slate-400 font-normal"> /${p.unit || 'pcs'}</span>
+                    <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+                        <span class="font-bold text-slate-700 text-xs sm:text-sm">${formatRupiah(p.price)}</span>
+                        <span class="text-[10px] sm:text-xs text-slate-400 font-normal"> /${p.unit || 'pcs'}</span>
                     </td>
-                    <td class="px-6 py-4">
+                    <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                         ${varInfo}
                     </td>
-                    <td class="px-6 py-4 text-right">
-                        <button onclick="openProductModal('${p.id}')" class="text-blue-500 hover:text-blue-700 text-sm font-medium mr-3">Edit</button>
-                        <button onclick="deleteProduct('${p.id}')" class="text-red-500 hover:text-red-700 text-sm font-medium">Hapus</button>
+                    <td class="px-4 sm:px-6 py-4 text-right whitespace-nowrap">
+                        <button onclick="openProductModal('${p.id}')" class="text-blue-500 hover:text-blue-700 text-xs sm:text-sm font-medium mr-2 sm:mr-3">Edit</button>
+                        <button onclick="deleteProduct('${p.id}')" class="text-red-500 hover:text-red-700 text-xs sm:text-sm font-medium">Hapus</button>
                     </td>
                 </tr>
                 `;
@@ -2204,12 +2259,12 @@
             
             tbody.innerHTML = globalCategories.map(c => `
                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                    <td class="px-6 py-3 font-mono text-sm">${c.sort}</td>
-                    <td class="px-6 py-3 font-bold text-slate-800">${c.name}</td>
-                    <td class="px-6 py-3">${String(c.is_active)==='true' ? '<span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded text-[10px] font-bold">AKTIF</span>' : '<span class="text-slate-500 bg-slate-100 px-2 py-1 rounded text-[10px] font-bold">MATI</span>'}</td>
-                    <td class="px-6 py-3 text-right">
-                        <button onclick="openCategoryModal('${c.id}')" class="text-blue-500 hover:text-blue-700 text-sm font-medium mr-3">Edit</button>
-                        <button onclick="deleteCategory('${c.id}')" class="text-red-500 hover:text-red-700 text-sm font-medium">Hapus</button>
+                    <td class="px-4 sm:px-6 py-3 font-mono text-xs sm:text-sm">${c.sort}</td>
+                    <td class="px-4 sm:px-6 py-3 font-bold text-slate-800 text-xs sm:text-sm">${c.name}</td>
+                    <td class="px-4 sm:px-6 py-3">${String(c.is_active)==='true' ? '<span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded text-[10px] font-bold">AKTIF</span>' : '<span class="text-slate-500 bg-slate-100 px-2 py-1 rounded text-[10px] font-bold">MATI</span>'}</td>
+                    <td class="px-4 sm:px-6 py-3 text-right">
+                        <button onclick="openCategoryModal('${c.id}')" class="text-blue-500 hover:text-blue-700 text-xs sm:text-sm font-medium mr-2 sm:mr-3">Edit</button>
+                        <button onclick="deleteCategory('${c.id}')" class="text-red-500 hover:text-red-700 text-xs sm:text-sm font-medium">Hapus</button>
                     </td>
                 </tr>
             `).join('');
@@ -2225,13 +2280,13 @@
             
             tbody.innerHTML = globalCoupons.map(c => `
                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                    <td class="px-6 py-3 font-bold text-slate-800 uppercase tracking-widest">${c.code}</td>
-                    <td class="px-6 py-3 text-sm text-emerald-600 font-bold">${c.type === 'percent' ? c.value + '%' : formatRupiah(c.value)}</td>
-                    <td class="px-6 py-3 text-sm text-slate-600">${formatRupiah(c.min_purchase)}</td>
-                    <td class="px-6 py-3">${String(c.is_active)==='true' ? '<span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded text-[10px] font-bold">AKTIF</span>' : '<span class="text-slate-500 bg-slate-100 px-2 py-1 rounded text-[10px] font-bold">MATI</span>'}</td>
-                    <td class="px-6 py-3 text-right">
-                        <button onclick="openCouponModal('${c.id}')" class="text-blue-500 hover:text-blue-700 text-sm font-medium mr-3">Edit</button>
-                        <button onclick="deleteCoupon('${c.id}')" class="text-red-500 hover:text-red-700 text-sm font-medium">Hapus</button>
+                    <td class="px-4 sm:px-6 py-3 font-bold text-slate-800 uppercase tracking-widest text-xs sm:text-sm">${c.code}</td>
+                    <td class="px-4 sm:px-6 py-3 text-xs sm:text-sm text-emerald-600 font-bold">${c.type === 'percent' ? c.value + '%' : formatRupiah(c.value)}</td>
+                    <td class="px-4 sm:px-6 py-3 text-xs sm:text-sm text-slate-600">${formatRupiah(c.min_purchase)}</td>
+                    <td class="px-4 sm:px-6 py-3">${String(c.is_active)==='true' ? '<span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded text-[10px] font-bold">AKTIF</span>' : '<span class="text-slate-500 bg-slate-100 px-2 py-1 rounded text-[10px] font-bold">MATI</span>'}</td>
+                    <td class="px-4 sm:px-6 py-3 text-right">
+                        <button onclick="openCouponModal('${c.id}')" class="text-blue-500 hover:text-blue-700 text-xs sm:text-sm font-medium mr-2 sm:mr-3">Edit</button>
+                        <button onclick="deleteCoupon('${c.id}')" class="text-red-500 hover:text-red-700 text-xs sm:text-sm font-medium">Hapus</button>
                     </td>
                 </tr>
             `).join('');
@@ -2247,11 +2302,11 @@
             
             tbody.innerHTML = globalShipping.map(c => `
                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                    <td class="px-6 py-3 font-bold text-slate-800">${c.area}</td>
-                    <td class="px-6 py-3 text-sm text-emerald-600 font-bold">${formatRupiah(c.rate)}</td>
-                    <td class="px-6 py-3 text-right">
-                        <button onclick="openShippingModal('${c.id}')" class="text-blue-500 hover:text-blue-700 text-sm font-medium mr-3">Edit</button>
-                        <button onclick="deleteShipping('${c.id}')" class="text-red-500 hover:text-red-700 text-sm font-medium">Hapus</button>
+                    <td class="px-4 sm:px-6 py-3 font-bold text-slate-800 text-xs sm:text-sm">${c.area}</td>
+                    <td class="px-4 sm:px-6 py-3 text-xs sm:text-sm text-emerald-600 font-bold">${formatRupiah(c.rate)}</td>
+                    <td class="px-4 sm:px-6 py-3 text-right">
+                        <button onclick="openShippingModal('${c.id}')" class="text-blue-500 hover:text-blue-700 text-xs sm:text-sm font-medium mr-2 sm:mr-3">Edit</button>
+                        <button onclick="deleteShipping('${c.id}')" class="text-red-500 hover:text-red-700 text-xs sm:text-sm font-medium">Hapus</button>
                     </td>
                 </tr>
             `).join('');
@@ -2287,38 +2342,38 @@
                 }
 
                 let rincianBiaya = `
-                    <div class="text-[10px] text-slate-500">Subtotal: <span class="font-bold text-slate-700">${formatRupiah(o.subtotal || 0)}</span></div>
-                    <div class="text-[10px] text-slate-500">Ongkir: <span class="font-bold text-slate-700">${formatRupiah(o.ongkir || 0)}</span></div>
-                    <div class="text-[10px] text-slate-500">Diskon: <span class="font-bold text-red-500">-${formatRupiah(o.diskon || 0)}</span></div>
-                    <div class="text-[11px] font-bold text-slate-800 mt-1 border-t border-slate-100 pt-1">Total: ${formatRupiah(o.total)}</div>
+                    <div class="text-[9px] sm:text-[10px] text-slate-500">Subtotal: <span class="font-bold text-slate-700">${formatRupiah(o.subtotal || 0)}</span></div>
+                    <div class="text-[9px] sm:text-[10px] text-slate-500">Ongkir: <span class="font-bold text-slate-700">${formatRupiah(o.ongkir || 0)}</span></div>
+                    <div class="text-[9px] sm:text-[10px] text-slate-500">Diskon: <span class="font-bold text-red-500">-${formatRupiah(o.diskon || 0)}</span></div>
+                    <div class="text-[10px] sm:text-[11px] font-bold text-slate-800 mt-1 border-t border-slate-100 pt-1">Total: ${formatRupiah(o.total)}</div>
                 `;
 
                 let actionBtns = '';
                 if (o.status === 'Baru') {
                     actionBtns = `
-                        <button onclick="updateOrderStatus('${o.id}', 'Selesai')" class="text-[10px] bg-emerald-500 text-white font-bold px-2.5 py-1.5 rounded hover:bg-emerald-600 mr-1 shadow-sm transition-colors">Tandai Selesai</button>
-                        <button onclick="deleteOrder('${o.id}')" class="text-[10px] bg-red-50 text-red-500 font-bold px-2.5 py-1.5 rounded hover:bg-red-100 border border-red-100 transition-colors">Batal & Hapus</button>
+                        <button onclick="updateOrderStatus('${o.id}', 'Selesai')" class="block w-full text-center text-[10px] bg-emerald-500 text-white font-bold px-2.5 py-1.5 rounded hover:bg-emerald-600 mb-1 shadow-sm transition-colors">Tandai Selesai</button>
+                        <button onclick="deleteOrder('${o.id}')" class="block w-full text-center text-[10px] bg-red-50 text-red-500 font-bold px-2.5 py-1.5 rounded hover:bg-red-100 border border-red-100 transition-colors">Batal & Hapus</button>
                     `;
                 } else {
-                    actionBtns = `<button onclick="deleteOrder('${o.id}')" class="text-[10px] bg-red-50 text-red-500 font-bold px-2.5 py-1.5 rounded hover:bg-red-100 border border-red-100 transition-colors">Hapus Riwayat</button>`;
+                    actionBtns = `<button onclick="deleteOrder('${o.id}')" class="block w-full text-center text-[10px] bg-red-50 text-red-500 font-bold px-2.5 py-1.5 rounded hover:bg-red-100 border border-red-100 transition-colors">Hapus Riwayat</button>`;
                 }
 
                 return `
                 <tr class="hover:bg-slate-50 border-b border-slate-100">
-                    <td class="px-6 py-4">
-                        <div class="font-mono text-xs font-bold text-slate-800">${o.id}</div>
-                        <div class="text-[10px] text-slate-500">${dateStr}</div>
+                    <td class="px-4 sm:px-6 py-4">
+                        <div class="font-mono text-[10px] sm:text-xs font-bold text-slate-800">${o.id}</div>
+                        <div class="text-[9px] sm:text-[10px] text-slate-500">${dateStr}</div>
                     </td>
-                    <td class="px-6 py-4 font-medium text-slate-700">
+                    <td class="px-4 sm:px-6 py-4 font-medium text-slate-700 text-xs sm:text-sm">
                         ${o.buyer || 'Walk-in Customer'}
                         <div class="text-[9px] text-slate-400">${o.wa || '-'}</div>
                     </td>
-                    <td class="px-6 py-4 text-[10px] text-slate-600 leading-snug">${itemsList}</td>
-                    <td class="px-6 py-4">${rincianBiaya}</td>
-                    <td class="px-6 py-4">
-                        <span class="${statusColor} px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">${o.status}</span>
+                    <td class="px-4 sm:px-6 py-4 text-[9px] sm:text-[10px] text-slate-600 leading-snug whitespace-normal min-w-[150px]">${itemsList}</td>
+                    <td class="px-4 sm:px-6 py-4">${rincianBiaya}</td>
+                    <td class="px-4 sm:px-6 py-4">
+                        <span class="${statusColor} px-2 py-1 rounded text-[9px] sm:text-[10px] font-bold uppercase tracking-wider">${o.status}</span>
                     </td>
-                    <td class="px-6 py-4 text-right">
+                    <td class="px-4 sm:px-6 py-4 text-right">
                         ${actionBtns}
                     </td>
                 </tr>
@@ -2369,31 +2424,31 @@
             }
             
             tbody.innerHTML = globalUsers.map(u => {
-                let statusUI = u.status === 'approved' ? `<span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-bold">Approved</span>` : `<span class="text-amber-600 bg-amber-50 px-2 py-1 rounded text-xs font-bold">Pending</span>`;
+                let statusUI = u.status === 'approved' ? `<span class="text-green-600 bg-green-50 px-2 py-1 rounded text-[10px] sm:text-xs font-bold">Approved</span>` : `<span class="text-amber-600 bg-amber-50 px-2 py-1 rounded text-[10px] sm:text-xs font-bold">Pending</span>`;
                 let expDate = new Date(u.expired_at).toLocaleDateString('id-ID');
-                let isExpired = new Date() > new Date(u.expired_at) ? '<span class="text-red-500 text-xs ml-1">(Habis)</span>' : '';
+                let isExpired = new Date() > new Date(u.expired_at) ? '<span class="text-red-500 text-[9px] sm:text-xs ml-1">(Habis)</span>' : '';
                 
                 let actionBtns = `
-                    <button onclick="openUserModal('${u.id}')" class="text-blue-500 hover:text-blue-700 text-xs font-medium mr-2">Edit</button>
-                    <button onclick="deleteUser('${u.id}')" class="text-red-500 hover:text-red-700 text-xs font-medium">Hapus</button>
+                    <button onclick="openUserModal('${u.id}')" class="text-blue-500 hover:text-blue-700 text-[10px] sm:text-xs font-medium mr-2 mb-1 sm:mb-0 block sm:inline">Edit</button>
+                    <button onclick="deleteUser('${u.id}')" class="text-red-500 hover:text-red-700 text-[10px] sm:text-xs font-medium block sm:inline">Hapus</button>
                 `;
                 
                 if (u.status === 'pending') {
-                    actionBtns = `<button onclick="approveUser('${u.id}')" class="text-emerald-600 hover:text-emerald-800 font-bold text-xs mr-3">✓ Approve</button>` + actionBtns;
+                    actionBtns = `<button onclick="approveUser('${u.id}')" class="text-emerald-600 hover:text-emerald-800 font-bold text-[10px] sm:text-xs mr-3 mb-1 sm:mb-0 block sm:inline">✓ Approve</button>` + actionBtns;
                 }
 
                 return `
                 <tr class="hover:bg-slate-50 border-b border-slate-50">
-                    <td class="px-6 py-3">
-                        <div class="font-bold text-slate-800">${u.nama_toko} <span class="font-normal text-xs text-slate-500">(@${u.username})</span></div>
-                        <div class="text-xs text-slate-500 font-mono">${u.id} | ${u.wa_number}</div>
+                    <td class="px-4 sm:px-6 py-3">
+                        <div class="font-bold text-slate-800 text-xs sm:text-sm">${u.nama_toko} <span class="font-normal text-[10px] sm:text-xs text-slate-500">(@${u.username})</span></div>
+                        <div class="text-[9px] sm:text-xs text-slate-500 font-mono">${u.id} | ${u.wa_number}</div>
                     </td>
-                    <td class="px-6 py-3">
-                        <span class="px-2 py-1 bg-slate-100 rounded text-[10px] font-bold uppercase tracking-wider">${u.role}</span>
+                    <td class="px-4 sm:px-6 py-3">
+                        <span class="px-2 py-1 bg-slate-100 rounded text-[9px] sm:text-[10px] font-bold uppercase tracking-wider">${u.role}</span>
                     </td>
-                    <td class="px-6 py-3">${statusUI}</td>
-                    <td class="px-6 py-3 text-xs font-medium">${expDate} ${isExpired}</td>
-                    <td class="px-6 py-3 text-right">${actionBtns}</td>
+                    <td class="px-4 sm:px-6 py-3">${statusUI}</td>
+                    <td class="px-4 sm:px-6 py-3 text-[10px] sm:text-xs font-medium">${expDate} ${isExpired}</td>
+                    <td class="px-4 sm:px-6 py-3 text-right whitespace-nowrap">${actionBtns}</td>
                 </tr>
                 `;
             }).join('');
@@ -2918,6 +2973,35 @@
             }
         });
 
+        // GLOBAL SETTING FORM
+        document.getElementById('globalSettingForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('btnSaveGlobalText');
+            const loader = document.getElementById('btnSaveGlobalLoader');
+            
+            btn.innerText = "Memproses..."; 
+            loader.classList.remove('hidden');
+
+            const payload = {
+                app_mode: document.getElementById('setAppMode').value,
+                show_landing_page: document.getElementById('setShowLanding').value
+            };
+
+            const res = await apiCall('update_app_settings', payload);
+
+            btn.innerText = "Simpan Pengaturan Global"; 
+            loader.classList.add('hidden');
+            
+            if (res.success) {
+                showGlobalAlert(res.message, true);
+                appSettings = { ...appSettings, ...payload };
+                renderNavigation(); 
+            } else {
+                alert(res.message);
+            }
+        });
+
         // --- 7. KASIR POS LOGIC ---
         function filterPOS() {
             const query = document.getElementById('posSearch').value.toLowerCase();
@@ -2937,12 +3021,12 @@
                 let badgeHtml = p.badge ? `<div class="absolute top-1 right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm z-10">${p.badge}</div>` : '';
                 return `
                 <div onclick="addToCart('${p.id}')" class="bg-white border border-slate-200 rounded-xl p-3 cursor-pointer hover:border-emerald-500 hover:shadow-md transition-all group relative">
-                    <div class="h-24 w-full bg-slate-100 rounded-lg mb-2 overflow-hidden relative">
+                    <div class="h-20 sm:h-24 w-full bg-slate-100 rounded-lg mb-2 overflow-hidden relative">
                         <img src="${p.img || 'https://placehold.co/100x100/e2e8f0/64748b?text=Box'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                         ${badgeHtml}
                     </div>
                     <h4 class="font-bold text-slate-800 text-xs sm:text-sm line-clamp-2 leading-tight">${p.name}</h4>
-                    <p class="text-emerald-600 font-bold text-sm mt-1">${formatRupiah(p.price)}</p>
+                    <p class="text-emerald-600 font-bold text-xs sm:text-sm mt-1">${formatRupiah(p.price)}</p>
                 </div>
                 `;
             }).join('');
@@ -2982,12 +3066,12 @@
                 return `
                 <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-slate-100 shadow-sm relative group">
                     <div class="flex-1 pr-4">
-                        <h4 class="text-xs font-bold text-slate-800 line-clamp-1">${item.name}</h4>
-                        <p class="text-[10px] text-slate-500">${formatRupiah(item.price)} x ${item.qty} ${item.unit || 'pcs'}</p>
+                        <h4 class="text-xs sm:text-sm font-bold text-slate-800 line-clamp-1">${item.name}</h4>
+                        <p class="text-[9px] sm:text-[10px] text-slate-500">${formatRupiah(item.price)} x ${item.qty} ${item.unit || 'pcs'}</p>
                     </div>
                     <div class="text-right shrink-0">
-                        <p class="text-xs font-bold text-slate-800 mb-1">${formatRupiah(sub)}</p>
-                        <button onclick="cart.splice(${index},1); renderCart()" class="text-[10px] bg-red-50 text-red-500 hover:bg-red-100 px-2 py-0.5 rounded">Hapus</button>
+                        <p class="text-xs sm:text-sm font-bold text-slate-800 mb-1">${formatRupiah(sub)}</p>
+                        <button onclick="cart.splice(${index},1); renderCart()" class="text-[9px] sm:text-[10px] bg-red-50 text-red-500 hover:bg-red-100 px-2 py-1 rounded transition-colors">Hapus</button>
                     </div>
                 </div>
                 `;
